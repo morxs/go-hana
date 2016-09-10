@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"encoding/csv"
 	"fmt"
+	"io"
 	"math"
 	"math/big"
+	"os"
 )
 
 //WriteMsg - Just a wrapper of fmt.Print()
@@ -68,4 +71,34 @@ func BigIntToFloat(sign bool, m *big.Int, exp int) float64 {
 	}
 
 	return float64(neg*m.Int64()) * math.Pow10(exp)
+}
+
+// ReadCsv - Read CSV file and return as string slice
+func ReadCsv(f string, comma rune) (rec [][]string, count int) {
+	file, err := os.Open(f)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	reader.Comma = comma
+
+	lineCount := 0
+
+	var WholeRecord [][]string
+
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error: ", err)
+			return
+		}
+		lineCount++
+		WholeRecord = append(WholeRecord, record)
+	}
+	return WholeRecord, lineCount
 }
