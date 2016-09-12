@@ -1,0 +1,5 @@
+[server]
+host = 10.0.0.1
+uid = SYSTEM
+pwd = HANA!DB_PASSWORD
+port = 30015
