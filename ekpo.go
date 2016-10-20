@@ -119,34 +119,71 @@ func main() {
 		w.Write(rec)
 
 		for rows.Next() {
-			var mandt, ebeln, ebelp, loekz, statu, aedat, txz01, matnr, ematn, bukrs, werks, lgort, bednr, matkl, infnr string
-			var idnlf, meins, bprme, agdat, mwskz, bonus, insmk, spinf, prsdr, schpr, uebtk, bwtar, bwtty, abskz, agmem string
-			var elikz, erekz, pstyp, knttp, kzvbr, vrtkz, twrkz, wepos, weunb, repos, webre, kzabs, labnr, konnr, ktpnr string
-			var abdat, kzstu, notkz, lmein, evers, prdat, bstyp, xoblr, kunnr, adrnr, ekkol, sktof, stafo, gewei, txjcd string
-			var etdrk, sobkz, arsnr, arsps, insnc, ssqss, zgtyp, ean11, bstae, revlv, geber, fistl, fipos, ko_gsber string
-			var ko_pargb, ko_prctr, ko_pprctr, meprf, voleh, inco1, inco2, vorab, kolif, ltsnr, packno, fplnr, stapo string
-			var uebpo, lewed, emlif, lblkz, satnr, attyp, kanba, adrn2, cuobj, xersy, eildt, drdat, druhr, drunr, aktnr string
-			var abeln, abelp, punei, saiso, saisj, ebon2, ebon3, ebonf, mlmaa, anfnr, anfps, kzkfg, usequ, umsok, banfn string
-			var bnfpo, mtart, uptyp, upvor, sikgr, retpo, aurel, bsgru, lfret, mfrgr, nrfhg, j_1bnbm, j_1bmatuse string
-			var j_1bmatorg, j_1bownpro, j_1bindust, abueb, nlabd, nfabd, kzbws, fabkz, j_1aindxp, j_1aidatep, mprof string
-			var eglkz, kztlf, kzfme, rdprf, techs, chg_srv, chg_fplnr, mfrpn, mfrnr, emnfr, novet, afnam, tzonrc, iprkz string
-			var lebre, berid, xconditions, apoms, ccomp, grant_nbr, fkber, status, reslo, kblnr, kblpos, weora string
-			var srv_bas_com, prio_urg, prio_req, empst, diff_invoice, trmrisk_relevant, spe_abgru, spe_crm_so string
-			var spe_crm_so_item, spe_crm_ref_so, spe_crm_ref_item, spe_crm_fkrel, spe_chng_sys, spe_insmk_src string
-			var spe_cq_ctrltype, spe_cq_nocq, reason_code, spe_ewm_dtc, exlin, exsnr, ehtyp, dptyp, dpdat, fls_rsto string
-			var ext_rfx_number, ext_rfx_item, ext_rfx_system, srm_contract_id, srm_contract_itm, blk_reason_id string
-			var blk_reason_txt, itcons, fixmg, bev1negen_item, bev1nedepfree, bev1nestruccat, advcode, budget_pd string
-			var excpe, iuid_relevant, mrpind, zztrans_type, zztransp_type, zzloadport, zzdestport, zzdischarge string
-			var zztrans_port, zzfrchl, zzupdate, zzdo_so, zzuom_gr, zzanln1, zzanln2, zzinventory, zzestate, zzmatnr string
-			var zzdono, zzdodate, zzctr_num, zzctr_dat, zzccpj, zzafce, zzxcont, zzcpno_long, zzcpit, zitgrp, zzstono string
-			var zzstoitem, zzqtyhl, zzstor_no, zzstor_it, zzkb, zzrefhno, zzpino, zzpono, zzvbeln_v1, zzposnr_v1 string
-			var zz_qm_opr_rm, zz_qm_opr_fp, zzposnr, zzrsnum, zzrspos, zzbudgetcode, refsite, ref_item, source_id string
-			var source_key, put_back, pol_id, cons_order string
+			var mandt, ebeln, ebelp, loekz, statu string
+			var aedat, txz01, matnr, ematn, bukrs string
+			var werks, lgort, bednr, matkl, infnr string
+			var idnlf, meins, bprme, agdat, mwskz string
+			var bonus, insmk, spinf, prsdr, schpr string
+			var uebtk, bwtar, bwtty, abskz, agmem string
+			var elikz, erekz, pstyp, knttp, kzvbr string
+			var vrtkz, twrkz, wepos, weunb, repos string
+			var webre, kzabs, labnr, konnr, ktpnr string
+			var abdat, kzstu, notkz, lmein, evers string
+			var prdat, bstyp, xoblr, kunnr, adrnr string
+			var ekkol, sktof, stafo, gewei, txjcd string
+			var etdrk, sobkz, arsnr, arsps, insnc string
+			var ssqss, zgtyp, ean11, bstae, revlv string
+			var geber, fistl, fipos, ko_gsber, ko_pargb string
+			var ko_prctr, ko_pprctr, meprf, voleh, inco1 string
+			var inco2, vorab, kolif, ltsnr, packno string
+			var fplnr, stapo, uebpo, lewed, emlif string
+			var lblkz, satnr, attyp, kanba, adrn2 string
+			var cuobj, xersy, eildt, drdat, druhr string
+			var drunr, aktnr, abeln, abelp, punei string
+			var saiso, saisj, ebon2, ebon3, ebonf string
+			var mlmaa, anfnr, anfps, kzkfg, usequ string
+			var umsok, banfn, bnfpo, mtart, uptyp string
+			var upvor, sikgr, retpo, aurel, bsgru string
+			var lfret, mfrgr, nrfhg, j_1bnbm, j_1bmatuse string
+			var j_1bmatorg, j_1bownpro, j_1bindust, abueb, nlabd string
+			var nfabd, kzbws, fabkz, j_1aindxp, j_1aidatep string
+			var mprof, eglkz, kztlf, kzfme, rdprf string
+			var techs, chg_srv, chg_fplnr, mfrpn, mfrnr string
+			var emnfr, novet, afnam, tzonrc, iprkz string
+			var lebre, berid, xconditions, apoms, ccomp string
+			var grant_nbr, fkber, status, reslo, kblnr string
+			var kblpos, weora, srv_bas_com, prio_urg, prio_req string
+			var empst, diff_invoice, trmrisk_relevant, spe_abgru, spe_crm_so string
+			var spe_crm_so_item, spe_crm_ref_so, spe_crm_ref_item, spe_crm_fkrel, spe_chng_sys string
+			var spe_insmk_src, spe_cq_ctrltype, spe_cq_nocq, reason_code, spe_ewm_dtc string
+			var exlin, exsnr, ehtyp, dptyp, dpdat string
+			var fls_rsto, ext_rfx_number, ext_rfx_item, ext_rfx_system, srm_contract_id string
+			var srm_contract_itm, blk_reason_id, blk_reason_txt, itcons, fixmg string
+			var bev1negen_item, bev1nedepfree, bev1nestruccat, advcode, budget_pd string
+			var excpe, iuid_relevant, mrpind, wabwe, zztrans_type string
+			var zztransp_type, zzloadport, zzdestport, zzdischarge, zztrans_port string
+			var zzfrchl, zzupdate, zzdo_so, zzuom_gr, zzanln1 string
+			var zzanln2, zzinventory, zzestate, zzmatnr, zzdono string
+			var zzdodate, zzctr_num, zzctr_dat, zzccpj, zzafce string
+			var zzxcont, zzcpno_long, zzcpit, zitgrp, zzstono string
+			var zzstoitem, zzqtyhl, zzstor_no, zzstor_it, zzkb string
+			var zzrefhno, zzpino, zzpono, zzvbeln_v1, zzposnr_v1 string
+			var zz_qm_opr_rm, zz_qm_opr_fp, zzposnr, zzrsnum, zzrspos string
+			var zzbudgetcode, refsite, ref_item, source_id, source_key string
+			var put_back, pol_id, cons_order string
 			var anzsn int
-			var ktmng, menge, bpumz, bpumn, umrez, umren, netpr, peinh, netwr, brtwr, webaz, mahnz, mahn1, mahn2, mahn3, uebto, untto, abftz, etfz1, etfz2, zwert, navnw, abmng, effwr, plifz, ntgew, brgew, volum, gnetwr, anzpu, mhdrz, kzwi1, kzwi2, kzwi3, kzwi4, kzwi5, kzwi6, mfzhi, ffzhi, bonba, cqu_sar, retpc, dppct, dpamt, zzdoqty []byte
+			var ktmng, menge, bpumz, bpumn, umrez []byte
+			var umren, netpr, peinh, netwr, brtwr []byte
+			var webaz, mahnz, mahn1, mahn2, mahn3 []byte
+			var uebto, untto, abftz, etfz1, etfz2 []byte
+			var zwert, navnw, abmng, effwr, plifz []byte
+			var ntgew, brgew, volum, gnetwr, anzpu []byte
+			var mhdrz, kzwi1, kzwi2, kzwi3, kzwi4 []byte
+			var kzwi5, kzwi6, mfzhi, ffzhi, bonba []byte
+			var cqu_sar, retpc, dppct, dpamt, zzdoqty []byte
 			var bukrs1, land1 string
 
-			if err := rows.Scan(&mandt, &ebeln, &ebelp, &loekz, &statu, &aedat, &txz01, &matnr, &ematn, &bukrs, &werks, &lgort, &bednr, &matkl, &infnr, &idnlf, &ktmng, &menge, &meins, &bprme, &bpumz, &bpumn, &umrez, &umren, &netpr, &peinh, &netwr, &brtwr, &agdat, &webaz, &mwskz, &bonus, &insmk, &spinf, &prsdr, &schpr, &mahnz, &mahn1, &mahn2, &mahn3, &uebto, &uebtk, &untto, &bwtar, &bwtty, &abskz, &agmem, &elikz, &erekz, &pstyp, &knttp, &kzvbr, &vrtkz, &twrkz, &wepos, &weunb, &repos, &webre, &kzabs, &labnr, &konnr, &ktpnr, &abdat, &abftz, &etfz1, &etfz2, &kzstu, &notkz, &lmein, &evers, &zwert, &navnw, &abmng, &prdat, &bstyp, &effwr, &xoblr, &kunnr, &adrnr, &ekkol, &sktof, &stafo, &plifz, &ntgew, &gewei, &txjcd, &etdrk, &sobkz, &arsnr, &arsps, &insnc, &ssqss, &zgtyp, &ean11, &bstae, &revlv, &geber, &fistl, &fipos, &ko_gsber, &ko_pargb, &ko_prctr, &ko_pprctr, &meprf, &brgew, &volum, &voleh, &inco1, &inco2, &vorab, &kolif, &ltsnr, &packno, &fplnr, &gnetwr, &stapo, &uebpo, &lewed, &emlif, &lblkz, &satnr, &attyp, &kanba, &adrn2, &cuobj, &xersy, &eildt, &drdat, &druhr, &drunr, &aktnr, &abeln, &abelp, &anzpu, &punei, &saiso, &saisj, &ebon2, &ebon3, &ebonf, &mlmaa, &mhdrz, &anfnr, &anfps, &kzkfg, &usequ, &umsok, &banfn, &bnfpo, &mtart, &uptyp, &upvor, &kzwi1, &kzwi2, &kzwi3, &kzwi4, &kzwi5, &kzwi6, &sikgr, &mfzhi, &ffzhi, &retpo, &aurel, &bsgru, &lfret, &mfrgr, &nrfhg, &j_1bnbm, &j_1bmatuse, &j_1bmatorg, &j_1bownpro, &j_1bindust, &abueb, &nlabd, &nfabd, &kzbws, &bonba, &fabkz, &j_1aindxp, &j_1aidatep, &mprof, &eglkz, &kztlf, &kzfme, &rdprf, &techs, &chg_srv, &chg_fplnr, &mfrpn, &mfrnr, &emnfr, &novet, &afnam, &tzonrc, &iprkz, &lebre, &berid, &xconditions, &apoms, &ccomp, &grant_nbr, &fkber, &status, &reslo, &kblnr, &kblpos, &weora, &srv_bas_com, &prio_urg, &prio_req, &empst, &diff_invoice, &trmrisk_relevant, &spe_abgru, &spe_crm_so, &spe_crm_so_item, &spe_crm_ref_so, &spe_crm_ref_item, &spe_crm_fkrel, &spe_chng_sys, &spe_insmk_src, &spe_cq_ctrltype, &spe_cq_nocq, &reason_code, &cqu_sar, &anzsn, &spe_ewm_dtc, &exlin, &exsnr, &ehtyp, &retpc, &dptyp, &dppct, &dpamt, &dpdat, &fls_rsto, &ext_rfx_number, &ext_rfx_item, &ext_rfx_system, &srm_contract_id, &srm_contract_itm, &blk_reason_id, &blk_reason_txt, &itcons, &fixmg, &bev1negen_item, &bev1nedepfree, &bev1nestruccat, &advcode, &budget_pd, &excpe, &iuid_relevant, &mrpind, &zztrans_type, &zztransp_type, &zzloadport, &zzdestport, &zzdischarge, &zztrans_port, &zzfrchl, &zzupdate, &zzdo_so, &zzuom_gr, &zzanln1, &zzanln2, &zzinventory, &zzestate, &zzmatnr, &zzdono, &zzdodate, &zzdoqty, &zzctr_num, &zzctr_dat, &zzccpj, &zzafce, &zzxcont, &zzcpno_long, &zzcpit, &zitgrp, &zzstono, &zzstoitem, &zzqtyhl, &zzstor_no, &zzstor_it, &zzkb, &zzrefhno, &zzpino, &zzpono, &zzvbeln_v1, &zzposnr_v1, &zz_qm_opr_rm, &zz_qm_opr_fp, &zzposnr, &zzrsnum, &zzrspos, &zzbudgetcode, &refsite, &ref_item, &source_id, &source_key, &put_back, &pol_id, &cons_order, &bukrs, &land1); err != nil {
+			if err := rows.Scan(&mandt, &ebeln, &ebelp, &loekz, &statu, &aedat, &txz01, &matnr, &ematn, &bukrs, &werks, &lgort, &bednr, &matkl, &infnr, &idnlf, &ktmng, &menge, &meins, &bprme, &bpumz, &bpumn, &umrez, &umren, &netpr, &peinh, &netwr, &brtwr, &agdat, &webaz, &mwskz, &bonus, &insmk, &spinf, &prsdr, &schpr, &mahnz, &mahn1, &mahn2, &mahn3, &uebto, &uebtk, &untto, &bwtar, &bwtty, &abskz, &agmem, &elikz, &erekz, &pstyp, &knttp, &kzvbr, &vrtkz, &twrkz, &wepos, &weunb, &repos, &webre, &kzabs, &labnr, &konnr, &ktpnr, &abdat, &abftz, &etfz1, &etfz2, &kzstu, &notkz, &lmein, &evers, &zwert, &navnw, &abmng, &prdat, &bstyp, &effwr, &xoblr, &kunnr, &adrnr, &ekkol, &sktof, &stafo, &plifz, &ntgew, &gewei, &txjcd, &etdrk, &sobkz, &arsnr, &arsps, &insnc, &ssqss, &zgtyp, &ean11, &bstae, &revlv, &geber, &fistl, &fipos, &ko_gsber, &ko_pargb, &ko_prctr, &ko_pprctr, &meprf, &brgew, &volum, &voleh, &inco1, &inco2, &vorab, &kolif, &ltsnr, &packno, &fplnr, &gnetwr, &stapo, &uebpo, &lewed, &emlif, &lblkz, &satnr, &attyp, &kanba, &adrn2, &cuobj, &xersy, &eildt, &drdat, &druhr, &drunr, &aktnr, &abeln, &abelp, &anzpu, &punei, &saiso, &saisj, &ebon2, &ebon3, &ebonf, &mlmaa, &mhdrz, &anfnr, &anfps, &kzkfg, &usequ, &umsok, &banfn, &bnfpo, &mtart, &uptyp, &upvor, &kzwi1, &kzwi2, &kzwi3, &kzwi4, &kzwi5, &kzwi6, &sikgr, &mfzhi, &ffzhi, &retpo, &aurel, &bsgru, &lfret, &mfrgr, &nrfhg, &j_1bnbm, &j_1bmatuse, &j_1bmatorg, &j_1bownpro, &j_1bindust, &abueb, &nlabd, &nfabd, &kzbws, &bonba, &fabkz, &j_1aindxp, &j_1aidatep, &mprof, &eglkz, &kztlf, &kzfme, &rdprf, &techs, &chg_srv, &chg_fplnr, &mfrpn, &mfrnr, &emnfr, &novet, &afnam, &tzonrc, &iprkz, &lebre, &berid, &xconditions, &apoms, &ccomp, &grant_nbr, &fkber, &status, &reslo, &kblnr, &kblpos, &weora, &srv_bas_com, &prio_urg, &prio_req, &empst, &diff_invoice, &trmrisk_relevant, &spe_abgru, &spe_crm_so, &spe_crm_so_item, &spe_crm_ref_so, &spe_crm_ref_item, &spe_crm_fkrel, &spe_chng_sys, &spe_insmk_src, &spe_cq_ctrltype, &spe_cq_nocq, &reason_code, &cqu_sar, &anzsn, &spe_ewm_dtc, &exlin, &exsnr, &ehtyp, &retpc, &dptyp, &dppct, &dpamt, &dpdat, &fls_rsto, &ext_rfx_number, &ext_rfx_item, &ext_rfx_system, &srm_contract_id, &srm_contract_itm, &blk_reason_id, &blk_reason_txt, &itcons, &fixmg, &bev1negen_item, &bev1nedepfree, &bev1nestruccat, &advcode, &budget_pd, &excpe, &iuid_relevant, &mrpind, &wabwe, &zztrans_type, &zztransp_type, &zzloadport, &zzdestport, &zzdischarge, &zztrans_port, &zzfrchl, &zzupdate, &zzdo_so, &zzuom_gr, &zzanln1, &zzanln2, &zzinventory, &zzestate, &zzmatnr, &zzdono, &zzdodate, &zzdoqty, &zzctr_num, &zzctr_dat, &zzccpj, &zzafce, &zzxcont, &zzcpno_long, &zzcpit, &zitgrp, &zzstono, &zzstoitem, &zzqtyhl, &zzstor_no, &zzstor_it, &zzkb, &zzrefhno, &zzpino, &zzpono, &zzvbeln_v1, &zzposnr_v1, &zz_qm_opr_rm, &zz_qm_opr_fp, &zzposnr, &zzrsnum, &zzrspos, &zzbudgetcode, &refsite, &ref_item, &source_id, &source_key, &put_back, &pol_id, &cons_order, &bukrs, &land1); err != nil {
 				utils.WriteMsg("SCAN")
 				log.Fatal(err)
 			}
@@ -157,7 +194,6 @@ func main() {
 			var i int
 
 			var record []string
-
 			record = append(record, mandt)
 			record = append(record, ebeln)
 			record = append(record, ebelp)
@@ -250,7 +286,6 @@ func main() {
 			neg, i = utils.DecodeDecimal(uebto, &bi)
 			z = utils.BigIntToFloat(neg, &bi, i)
 			record = append(record, fmt.Sprintf("%.4f", z))
-
 			record = append(record, uebtk)
 
 			neg, i = utils.DecodeDecimal(untto, &bi)
@@ -357,7 +392,6 @@ func main() {
 			neg, i = utils.DecodeDecimal(volum, &bi)
 			z = utils.BigIntToFloat(neg, &bi, i)
 			record = append(record, fmt.Sprintf("%.4f", z))
-
 			record = append(record, voleh)
 			record = append(record, inco1)
 			record = append(record, inco2)
@@ -561,6 +595,7 @@ func main() {
 			record = append(record, excpe)
 			record = append(record, iuid_relevant)
 			record = append(record, mrpind)
+			record = append(record, wabwe)
 			record = append(record, zztrans_type)
 			record = append(record, zztransp_type)
 			record = append(record, zzloadport)
@@ -615,6 +650,7 @@ func main() {
 			record = append(record, put_back)
 			record = append(record, pol_id)
 			record = append(record, cons_order)
+
 			record = append(record, bukrs1)
 			record = append(record, land1)
 			w.Write(record)
