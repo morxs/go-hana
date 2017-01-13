@@ -53,6 +53,7 @@ const (
 	   	cast(('99999999' - gdatu) as varchar(8)) as "DATUM"
 	   	from z_wilmar1.tcurr
 	   	where mandt = '777'
+		and kurst = 'M'
 	   )
 	   where "DATUM" between ? and ?`
 )
