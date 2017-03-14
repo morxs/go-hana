@@ -45,7 +45,7 @@ func main() {
 		iniKeyUsername := iniSection.Key("uid").String()
 		iniKeyPassword := iniSection.Key("pwd").String()
 		iniKeyHost := iniSection.Key("host").String()
-		// iniKeyHost = "10.11.1.53"
+		iniKeyHost = "10.11.1.53"
 		iniKeyPort := iniSection.Key("port").String()
 		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
