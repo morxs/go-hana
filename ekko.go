@@ -31,7 +31,187 @@ const (
 
 const (
 	ekkoSQL = `select
-*
+MANDT
+, EBELN
+, BUKRS
+, BSTYP
+, BSART
+, BSAKZ
+, LOEKZ
+, STATU
+, AEDAT
+, ERNAM
+, PINCR
+, LPONR
+, LIFNR
+, SPRAS
+, ZTERM
+, ZBD1T
+, ZBD2T
+, ZBD3T
+, ZBD1P
+, ZBD2P
+, EKORG
+, EKGRP
+, WAERS
+, WKURS
+, KUFIX
+, BEDAT
+, KDATB
+, KDATE
+, BWBDT
+, ANGDT
+, BNDDT
+, GWLDT
+, AUSNR
+, ANGNR
+, IHRAN
+, IHREZ
+, VERKF
+, TELF1
+, LLIEF
+, KUNNR
+, KONNR
+, ABGRU
+, AUTLF
+, WEAKT
+, RESWK
+, LBLIF
+, INCO1
+, INCO2
+, KTWRT
+, SUBMI
+, KNUMV
+, KALSM
+, STAFO
+, LIFRE
+, EXNUM
+, UNSEZ
+, LOGSY
+, UPINC
+, STAKO
+, FRGGR
+, FRGSX
+, FRGKE
+, FRGZU
+, FRGRL
+, LANDS
+, LPHIS
+, ADRNR
+, STCEG_L
+, STCEG
+, ABSGR
+, ADDNR
+, KORNR
+, MEMORY
+, PROCSTAT
+, RLWRT
+, REVNO
+, SCMPROC
+, REASON_CODE
+, MEMORYTYPE
+, RETTP
+, RETPC
+, DPTYP
+, DPPCT
+, DPAMT
+, DPDAT
+, MSR_ID
+, HIERARCHY_EXISTS
+, THRESHOLD_EXISTS
+, LEGAL_CONTRACT
+, DESCRIPTION
+, RELEASE_DATE
+, FORCE_ID
+, FORCE_CNT
+, RELOC_ID
+, RELOC_SEQ_ID
+, ZZVESSEL
+, ZZTRANS_VSL
+, ZZTRUCK_NO
+, ZZDO_SO
+, ZZMTART
+, ZZREF
+, ZZTYPE
+, ZZERZET
+, ZZVOYAGE
+, ZZBEZET
+, ZZMPOB
+, ZZFINAL
+, ZZSAILDATE
+, ZZQTYOFCONT
+, ZZBROKER
+, ZZTYPEKONT
+, ZZCONT
+, ZZVAT_TERM
+, ZZUPD_PLAN
+, ZZCPNO
+, ZZCPITEM
+, ZZNOPRINT_TERM
+, ZZDP
+, ZZORIGIN
+, ZZIMPTXT
+, ZZSEALNO
+, ZZCONNM
+, ZZPIBNO
+, ZZXYEAR
+, ZZPIBPORT
+, ZZKPPBC_P
+, ZZMERGE_PRC
+, ZZTANKERNO
+, ZZBILL_ADRCO
+, ZZFRGTXT
+, ZZISCC
+, ZZWBREF
+, ZZTMP_CTR_NO
+, ZZDEM_COST
+, ZZDEM_COST_CCY
+, ZZDEM_TAX
+, ZZDEM_TAX_CCY
+, ZZORDRCV
+, ZZPOWOPR
+, ZZEXTO
+, ZZCARNO
+, ZZFBANO
+, ZZCHKAFCE
+, ZZOPFEE
+, ZZPRPEZ
+, ZZNPWP
+, ZZITEM
+, ZZAUFNR
+, ZZPNLTYTXT
+, ZZBLNO
+, ZZDATE
+, ZZPORT
+, ZZYEAR
+, POHF_TYPE
+, EQ_EINDT
+, EQ_WERKS
+, FIXPO
+, EKGRP_ALLOW
+, WERKS_ALLOW
+, CONTRACT_ALLOW
+, PSTYP_ALLOW
+, FIXPO_ALLOW
+, KEY_ID_ALLOW
+, AUREL_ALLOW
+, DELPER_ALLOW
+, EINDT_ALLOW
+, OTB_LEVEL
+, OTB_COND_TYPE
+, KEY_ID
+, OTB_VALUE
+, OTB_CURR
+, OTB_RES_VALUE
+, OTB_SPEC_VALUE
+, SPR_RSN_PROFILE
+, BUDG_TYPE
+, OTB_STATUS
+, OTB_REASON
+, CHECK_TYPE
+, CON_OTB_REQ
+, CON_PREBOOK_LEV
+, CON_DISTR_LEV
 from z_wilmar1.ekko
 where bedat between ? and ?
 and bstyp = 'F'
@@ -111,23 +291,45 @@ func main() {
 		w.Write(rec)
 
 		for rows.Next() {
-			var mandt, ebeln, bukrs, bstyp, bsart, bsakz, loekz, statu, aedat, ernam, pincr string
-			var lponr, lifnr, spras, zterm, ekorg, ekgrp, waers, kufix, bedat, kdatb, kdate string
-			var bwbdt, angdt, bnddt, gwldt, ausnr, angnr, ihran, ihrez, verkf, telf1, llief string
-			var kunnr, konnr, abgru, autlf, weakt, reswk, lblif, inco1, inco2, submi, knumv string
-			var kalsm, stafo, lifre, exnum, unsez, logsy, upinc, stako, frggr, frgsx, frgke string
-			var frgzu, frgrl, lands, lphis, adrnr, stceg_l, stceg, absgr, addnr, kornr, memory, procstat, revno, scmproc string
-			var reason_code, memorytype, rettp, dptyp, dpdat, msr_id, hierarchy_exists, threshold_exists, legal_contract, description string
-			var release_date, force_id, force_cnt, reloc_id, reloc_seq_id, zzvessel, zztrans_vsl, zztruck_no, zzdo_so, zzmtart, zzref string
-			var zztype, zzerzet, zzvoyage, zzbezet, zzmpob, zzfinal, zzsaildate, zzbroker, zztypekont, zzcont, zzvat_term, zzupd_plan string
-			var zzcpno, zzcpitem, zznoprint_term, zzdp, zzorigin, zzimptxt, zzsealno, zzconnm, zzpibno, zzxyear, zzpibport, zzkppbc_p string
-			var zzmerge_prc, zztankerno, zzbill_adrco, zzfrgtxt, zziscc, zzwbref, zztmp_ctr_no, zzdem_cost_ccy, zzdem_tax_ccy, zzordrcv string
-			var zzpowopr, zzcarno, zzfbano, zzchkafce, zzopfee, zzprpez, zznpwp, zzitem, zzaufnr, zzpnltytxt, pohf_type, eq_eindt string
-			var eq_werks, fixpo, ekgrp_allow, werks_allow, contract_allow, pstyp_allow, fixpo_allow, key_id_allow, aurel_allow, delper_allow string
-			var eindt_allow, otb_level, otb_cond_type, key_id, otb_curr, spr_rsn_profile, budg_type, otb_status, otb_reason, check_type string
+			var mandt, ebeln, bukrs, bstyp, bsart string
+			var bsakz, loekz, statu, aedat, ernam string
+			var pincr, lponr, lifnr, spras, zterm string
+			var ekorg, ekgrp, waers, kufix, bedat string
+			var kdatb, kdate, bwbdt, angdt, bnddt string
+			var gwldt, ausnr, angnr, ihran, ihrez string
+			var verkf, telf1, llief, kunnr, konnr string
+			var abgru, autlf, weakt, reswk, lblif string
+			var inco1, inco2, submi, knumv, kalsm string
+			var stafo, lifre, exnum, unsez, logsy string
+			var upinc, stako, frggr, frgsx, frgke string
+			var frgzu, frgrl, lands, lphis, adrnr string
+			var stceg_l, stceg, absgr, addnr, kornr string
+			var memory, procstat, revno, scmproc, reason_code string
+			var memorytype, rettp, dptyp, dpdat, msr_id string
+			var hierarchy_exists, threshold_exists, legal_contract, description, release_date string
+			var force_id, force_cnt, reloc_id, reloc_seq_id, zzvessel string
+			var zztrans_vsl, zztruck_no, zzdo_so, zzmtart, zzref string
+			var zztype, zzerzet, zzvoyage, zzbezet, zzmpob string
+			var zzfinal, zzsaildate, zzbroker, zztypekont, zzcont string
+			var zzvat_term, zzupd_plan, zzcpno, zzcpitem, zznoprint_term string
+			var zzdp, zzorigin, zzimptxt, zzsealno, zzconnm string
+			var zzpibno, zzxyear, zzpibport, zzkppbc_p, zzmerge_prc string
+			var zztankerno, zzbill_adrco, zzfrgtxt, zziscc, zzwbref string
+			var zztmp_ctr_no, zzdem_cost_ccy, zzdem_tax_ccy, zzordrcv, zzpowopr string
+			var zzcarno, zzfbano, zzchkafce, zzopfee, zzprpez string
+			var zznpwp, zzitem, zzaufnr, zzpnltytxt, zzblno string
+			var zzdate, zzport, zzyear, pohf_type, eq_eindt string
+			var eq_werks, fixpo, ekgrp_allow, werks_allow, contract_allow string
+			var pstyp_allow, fixpo_allow, key_id_allow, aurel_allow, delper_allow string
+			var eindt_allow, otb_level, otb_cond_type, key_id, otb_curr string
+			var spr_rsn_profile, budg_type, otb_status, otb_reason, check_type string
 			var con_otb_req, con_prebook_lev, con_distr_lev string
-			var zbd1t, zbd2t, zbd3t, zbd1p, zbd2p, wkurs, ktwrt, rlwrt, retpc, dppct, dpamt, zzqtyofcont, zzdem_cost, zzdem_tax, zzexto, otb_value, otb_res_value, otb_spec_value []byte
-			if err := rows.Scan(&mandt, &ebeln, &bukrs, &bstyp, &bsart, &bsakz, &loekz, &statu, &aedat, &ernam, &pincr, &lponr, &lifnr, &spras, &zterm, &zbd1t, &zbd2t, &zbd3t, &zbd1p, &zbd2p, &ekorg, &ekgrp, &waers, &wkurs, &kufix, &bedat, &kdatb, &kdate, &bwbdt, &angdt, &bnddt, &gwldt, &ausnr, &angnr, &ihran, &ihrez, &verkf, &telf1, &llief, &kunnr, &konnr, &abgru, &autlf, &weakt, &reswk, &lblif, &inco1, &inco2, &ktwrt, &submi, &knumv, &kalsm, &stafo, &lifre, &exnum, &unsez, &logsy, &upinc, &stako, &frggr, &frgsx, &frgke, &frgzu, &frgrl, &lands, &lphis, &adrnr, &stceg_l, &stceg, &absgr, &addnr, &kornr, &memory, &procstat, &rlwrt, &revno, &scmproc, &reason_code, &memorytype, &rettp, &retpc, &dptyp, &dppct, &dpamt, &dpdat, &msr_id, &hierarchy_exists, &threshold_exists, &legal_contract, &description, &release_date, &force_id, &force_cnt, &reloc_id, &reloc_seq_id, &zzvessel, &zztrans_vsl, &zztruck_no, &zzdo_so, &zzmtart, &zzref, &zztype, &zzerzet, &zzvoyage, &zzbezet, &zzmpob, &zzfinal, &zzsaildate, &zzqtyofcont, &zzbroker, &zztypekont, &zzcont, &zzvat_term, &zzupd_plan, &zzcpno, &zzcpitem, &zznoprint_term, &zzdp, &zzorigin, &zzimptxt, &zzsealno, &zzconnm, &zzpibno, &zzxyear, &zzpibport, &zzkppbc_p, &zzmerge_prc, &zztankerno, &zzbill_adrco, &zzfrgtxt, &zziscc, &zzwbref, &zztmp_ctr_no, &zzdem_cost, &zzdem_cost_ccy, &zzdem_tax, &zzdem_tax_ccy, &zzordrcv, &zzpowopr, &zzexto, &zzcarno, &zzfbano, &zzchkafce, &zzopfee, &zzprpez, &zznpwp, &zzitem, &zzaufnr, &zzpnltytxt, &pohf_type, &eq_eindt, &eq_werks, &fixpo, &ekgrp_allow, &werks_allow, &contract_allow, &pstyp_allow, &fixpo_allow, &key_id_allow, &aurel_allow, &delper_allow, &eindt_allow, &otb_level, &otb_cond_type, &key_id, &otb_value, &otb_curr, &otb_res_value, &otb_spec_value, &spr_rsn_profile, &budg_type, &otb_status, &otb_reason, &check_type, &con_otb_req, &con_prebook_lev, &con_distr_lev); err != nil {
+			var zbd1t, zbd2t, zbd3t, zbd1p, zbd2p []byte
+			var wkurs, ktwrt, rlwrt, retpc, dppct []byte
+			var dpamt, zzqtyofcont, zzdem_cost, zzdem_tax, zzexto []byte
+			var otb_value, otb_res_value, otb_spec_value []byte
+
+			if err := rows.Scan(&mandt, &ebeln, &bukrs, &bstyp, &bsart, &bsakz, &loekz, &statu, &aedat, &ernam, &pincr, &lponr, &lifnr, &spras, &zterm, &zbd1t, &zbd2t, &zbd3t, &zbd1p, &zbd2p, &ekorg, &ekgrp, &waers, &wkurs, &kufix, &bedat, &kdatb, &kdate, &bwbdt, &angdt, &bnddt, &gwldt, &ausnr, &angnr, &ihran, &ihrez, &verkf, &telf1, &llief, &kunnr, &konnr, &abgru, &autlf, &weakt, &reswk, &lblif, &inco1, &inco2, &ktwrt, &submi, &knumv, &kalsm, &stafo, &lifre, &exnum, &unsez, &logsy, &upinc, &stako, &frggr, &frgsx, &frgke, &frgzu, &frgrl, &lands, &lphis, &adrnr, &stceg_l, &stceg, &absgr, &addnr, &kornr, &memory, &procstat, &rlwrt, &revno, &scmproc, &reason_code, &memorytype, &rettp, &retpc, &dptyp, &dppct, &dpamt, &dpdat, &msr_id, &hierarchy_exists, &threshold_exists, &legal_contract, &description, &release_date, &force_id, &force_cnt, &reloc_id, &reloc_seq_id, &zzvessel, &zztrans_vsl, &zztruck_no, &zzdo_so, &zzmtart, &zzref, &zztype, &zzerzet, &zzvoyage, &zzbezet, &zzmpob, &zzfinal, &zzsaildate, &zzqtyofcont, &zzbroker, &zztypekont, &zzcont, &zzvat_term, &zzupd_plan, &zzcpno, &zzcpitem, &zznoprint_term, &zzdp, &zzorigin, &zzimptxt, &zzsealno, &zzconnm, &zzpibno, &zzxyear, &zzpibport, &zzkppbc_p, &zzmerge_prc, &zztankerno, &zzbill_adrco, &zzfrgtxt, &zziscc, &zzwbref, &zztmp_ctr_no, &zzdem_cost, &zzdem_cost_ccy, &zzdem_tax, &zzdem_tax_ccy, &zzordrcv, &zzpowopr, &zzexto, &zzcarno, &zzfbano, &zzchkafce, &zzopfee, &zzprpez, &zznpwp, &zzitem, &zzaufnr, &zzpnltytxt, &zzblno, &zzdate, &zzport, &zzyear, &pohf_type, &eq_eindt, &eq_werks, &fixpo, &ekgrp_allow, &werks_allow, &contract_allow, &pstyp_allow, &fixpo_allow, &key_id_allow, &aurel_allow, &delper_allow, &eindt_allow, &otb_level, &otb_cond_type, &key_id, &otb_value, &otb_curr, &otb_res_value, &otb_spec_value, &spr_rsn_profile, &budg_type, &otb_status, &otb_reason, &check_type, &con_otb_req, &con_prebook_lev, &con_distr_lev); err != nil {
 				utils.WriteMsg("SCAN")
 				log.Fatal(err)
 			}
@@ -138,7 +340,6 @@ func main() {
 			var i int
 
 			var record []string
-
 			record = append(record, mandt)
 			record = append(record, ebeln)
 			record = append(record, bukrs)
@@ -343,6 +544,10 @@ func main() {
 			record = append(record, zzitem)
 			record = append(record, zzaufnr)
 			record = append(record, zzpnltytxt)
+			record = append(record, zzblno)
+			record = append(record, zzdate)
+			record = append(record, zzport)
+			record = append(record, zzyear)
 			record = append(record, pohf_type)
 			record = append(record, eq_eindt)
 			record = append(record, eq_werks)
@@ -363,6 +568,7 @@ func main() {
 			neg, i = utils.DecodeDecimal(otb_value, &bi)
 			z = utils.BigIntToFloat(neg, &bi, i)
 			record = append(record, fmt.Sprintf("%.4f", z))
+
 			record = append(record, otb_curr)
 
 			neg, i = utils.DecodeDecimal(otb_res_value, &bi)
@@ -381,6 +587,7 @@ func main() {
 			record = append(record, con_otb_req)
 			record = append(record, con_prebook_lev)
 			record = append(record, con_distr_lev)
+
 			w.Write(record)
 			//fmt.Println(record)
 		}
