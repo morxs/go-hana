@@ -48,13 +48,13 @@ func main() {
 		for i := 0; i < len(rec); i++ {
 			switch strings.ToUpper(rec[i][1]) {
 			case "NVARCHAR", "VARCHAR":
-				RecString = append(RecString, strings.Replace(strings.ToLower(rec[i][0], "/", "", -1)))
+				RecString = append(RecString, strings.Replace(strings.ToLower(rec[i][0]), "/", "", -1))
 				AppendString = append(AppendString, strings.Replace(AppendStringTemplate, "$", strings.Replace(strings.ToLower(rec[i][0]), "/", "", -1), 1))
 			case "DECIMAL":
-				RecDecimal = append(RecDecimal, strings.Replace(strings.ToLower(rec[i][0], "/", "", -1)))
+				RecDecimal = append(RecDecimal, strings.Replace(strings.ToLower(rec[i][0]), "/", "", -1))
 				AppendString = append(AppendString, strings.Replace(AppendDecimalTemplate, "$", strings.Replace(strings.ToLower(rec[i][0]), "/", "", -1), 1))
 			case "INTEGER", "SMALLINT":
-				RecInt = append(RecInt, strings.Replace(strings.ToLower(rec[i][0], "/", "", -1)))
+				RecInt = append(RecInt, strings.Replace(strings.ToLower(rec[i][0]), "/", "", -1))
 				AppendString = append(AppendString, strings.Replace(AppendIntTemplate, "$", strings.Replace(strings.ToLower(rec[i][0]), "/", "", -1), 1))
 			}
 			fmt.Println(rec[i])
