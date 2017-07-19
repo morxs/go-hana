@@ -5,3 +5,5 @@
 *.xlsx
 /.idea
 /vendor
+*.zip
+*.zip.*
