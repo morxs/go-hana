@@ -28,7 +28,15 @@ const (
 
 const (
 	t024SQL = `select
-*
+MANDT
+, EKGRP
+, EKNAM
+, EKTEL
+, LDEST
+, TELFX
+, TEL_NUMBER
+, TEL_EXTENS
+, SMTP_ADDR
 from z_wilmar1.t024
 where mandt = '777'`
 )

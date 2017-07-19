@@ -33,34 +33,60 @@ const (
 
 const (
 	maraSQL = `select 
-*
-from z_wilmar1.mara
-where mandt = '777'
-and matnr in 
-(
-	select 
-	distinct a.matnr
-	from z_wilmar1.ekpo a
-	left join z_wilmar1.ekko b
-	on a.mandt = b.mandt
-	and a.ebeln = b.ebeln
-	left join z_wilmar1.t001 c
-	on a.mandt = c.mandt
-	and a.bukrs = c.bukrs
-	where b.bedat between ? and ?
-	and b.bstyp = 'F'
-	and (b.bsart like '%20' or b.bsart like '%25')
-	and b.loekz = ''
-	and a.loekz = ''
-	and b.bukrs in 
-	('BM', 'BO', 'CL', 'DE', 'EB', 'EC', 'EE', 'EL', 'EP', 'ES', 'FB', 'FM', 'GM', 'GU', 'HM', 'JW', 'KI', 'KM', 'NE', 'NO', 'NS', 'NX', 'OE', 'PB', 'PE', 'PO', 'RB', 'RH', 'RM', 'SE', 'SF', 'SG', 'SH', 'SO', 'SU', 'VI', 'WH',
-	'AA', 'AD', 'AG', 'AJ', 'AN', 'AP', 'BN', 'BV', 'BW', 'BX', 'BY', 'CA', 'CC', 'CX', 'DA',
-	'DB', 'DC', 'DG', 'DI', 'GA', 'GK', 'IA', 'ID', 'IE', 'IF', 'KD', 'KF', 'KG', 'MD', 'MF', 'MH',
-	'MJ', 'MO', 'NI', 'PA', 'PF', 'PR', 'PT', 'PV', 'PX', 'RA', 'RJ',
-	'SB', 'SJ', 'SN', 'SV', 'SX', 'TB', 'TC', 'TM', 'TN', 'UD', 'UI', 'WJ',
-	'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')
-)
-and ersda between ? and ?`
+	MANDT, MATNR, ERSDA, ERNAM, LAEDA, AENAM, VPSTA, PSTAT, LVORM, MTART, MBRSH, 
+	MATKL, BISMT, MEINS, BSTME, ZEINR, ZEIAR, ZEIVR, ZEIFO, AESZN, BLATT, BLANZ, 
+	FERTH, FORMT, GROES, WRKST, NORMT, LABOR, EKWSL, BRGEW, NTGEW, GEWEI, VOLUM, 
+	VOLEH, BEHVO, RAUBE, TEMPB, DISST, TRAGR, STOFF, SPART, KUNNR, EANNR, WESCH, 
+	BWVOR, BWSCL, SAISO, ETIAR, ETIFO, ENTAR, EAN11, NUMTP, LAENG, BREIT, HOEHE, 
+	MEABM, PRDHA, AEKLK, CADKZ, QMPUR, ERGEW, ERGEI, ERVOL, ERVOE, GEWTO, VOLTO, 
+	VABME, KZREV, KZKFG, XCHPF, VHART, FUELG, STFAK, MAGRV, BEGRU, DATAB, LIQDT, 
+	SAISJ, PLGTP, MLGUT, EXTWG, SATNR, ATTYP, KZKUP, KZNFM, PMATA, MSTAE, MSTAV, 
+	MSTDE, MSTDV, TAKLV, RBNRM, MHDRZ, MHDHB, MHDLP, INHME, INHAL, VPREH, ETIAG, 
+	INHBR, CMETH, CUOBF, KZUMW, KOSCH, SPROF, NRFHG, MFRPN, MFRNR, BMATN, MPROF, 
+	KZWSM, SAITY, PROFL, IHIVI, ILOOS, SERLV, KZGVH, XGCHP, KZEFF, COMPL, IPRKZ, 
+	RDMHD, PRZUS, MTPOS_MARA, BFLME, MATFI, CMREL, BBTYP, SLED_BBD, 
+	GTIN_VARIANT, GENNR, RMATP, GDS_RELEVANT, WEORA, HUTYP_DFLT, PILFERABLE, 
+	WHSTC, WHMATGR, HNDLCODE, HAZMAT, HUTYP, TARE_VAR, MAXC, MAXC_TOL, MAXL, 
+	MAXB, MAXH, MAXDIM_UOM, HERKL, MFRGR, QQTIME, QQTIMEUOM, QGRP, SERIAL, 
+	PS_SMARTFORM, LOGUNIT, CWQREL, CWQPROC, CWQTOLGR, ADPROF, IPMIPPRODUCT, 
+	ALLOW_PMAT_IGNO, MEDIUM, "/BEV1/LULEINH", "/BEV1/LULDEGRP", "/BEV1/NESTRUCCAT", 
+	"/DSD/SL_TOLTYP", "/DSD/SV_CNT_GRP", "/DSD/VC_GROUP", "/VSO/R_TILT_IND", 
+	"/VSO/R_STACK_IND", "/VSO/R_BOT_IND", "/VSO/R_TOP_IND", "/VSO/R_STACK_NO", 
+	"/VSO/R_PAL_IND", "/VSO/R_PAL_OVR_D", "/VSO/R_PAL_OVR_W", "/VSO/R_PAL_B_HT", 
+	"/VSO/R_PAL_MIN_H", "/VSO/R_TOL_B_HT", "/VSO/R_NO_P_GVH", "/VSO/R_QUAN_UNIT", 
+	"/VSO/R_KZGVH_IND", PACKCODE, DG_PACK_STATUS, MCOND, RETDELC, LOGLEV_RETO, 
+	NSNID, IMATN, PICNUM, BSTAT, COLOR_ATINN, SIZE1_ATINN, SIZE2_ATINN, COLOR, 
+	SIZE1, SIZE2, FREE_CHAR, CARE_CODE, BRAND_ID, FIBER_CODE1, FIBER_PART1, 
+	FIBER_CODE2, FIBER_PART2, FIBER_CODE3, FIBER_PART3, FIBER_CODE4, 
+	FIBER_PART4, FIBER_CODE5, FIBER_PART5, FASHGRD, MENGE1, MEINS1, MENGE2, 
+	MEINS2, ZMATTYPE, ZZCERT, ZZBMATNR
+	from z_wilmar1.mara
+	where mandt = '777'
+	and matnr in 
+	(
+		select 
+		distinct a.matnr
+		from z_wilmar1.ekpo a
+		left join z_wilmar1.ekko b
+		on a.mandt = b.mandt
+		and a.ebeln = b.ebeln
+		left join z_wilmar1.t001 c
+		on a.mandt = c.mandt
+		and a.bukrs = c.bukrs
+		where b.bedat between ? and ?
+		and b.bstyp = 'F'
+		and (b.bsart like '%20' or b.bsart like '%25')
+		and b.loekz = ''
+		and a.loekz = ''
+		and b.bukrs in 
+		('BM', 'BO', 'CL', 'DE', 'EB', 'EC', 'EE', 'EL', 'EP', 'ES', 'FB', 'FM', 'GM', 'GU', 'HM', 'JW', 'KI', 'KM', 'NE', 'NO', 'NS', 'NX', 'OE', 'PB', 'PE', 'PO', 'RB', 'RH', 'RM', 'SE', 'SF', 'SG', 'SH', 'SO', 'SU', 'VI', 'WH',
+		'AA', 'AD', 'AG', 'AJ', 'AN', 'AP', 'BN', 'BV', 'BW', 'BX', 'BY', 'CA', 'CC', 'CX', 'DA',
+		'DB', 'DC', 'DG', 'DI', 'GA', 'GK', 'IA', 'ID', 'IE', 'IF', 'KD', 'KF', 'KG', 'MD', 'MF', 'MH',
+		'MJ', 'MO', 'NI', 'PA', 'PF', 'PR', 'PT', 'PV', 'PX', 'RA', 'RJ',
+		'SB', 'SJ', 'SN', 'SV', 'SX', 'TB', 'TC', 'TM', 'TN', 'UD', 'UI', 'WJ',
+		'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')
+	)
+	and ersda between ? and ?`
 )
 
 const (
@@ -164,7 +190,7 @@ func main() {
 			var color, size1, size2, free_char, care_code string
 			var brand_id, fiber_code1, fiber_part1, fiber_code2, fiber_part2 string
 			var fiber_code3, fiber_part3, fiber_code4, fiber_part4, fiber_code5 string
-			var fiber_part5, fashgrd, meins1, meins2, zmattype string
+			var fiber_part5, fashgrd, meins1, meins2, zmattype, zzbmatnr string
 			var zzcert string
 			var stfak int
 			var brgew, ntgew, volum, wesch, laeng []byte
@@ -175,7 +201,7 @@ func main() {
 			var vsor_pal_ovr_w, vsor_pal_b_ht, vsor_pal_min_h, vsor_tol_b_ht, menge1 []byte
 			var menge2 []byte
 
-			if err := rows.Scan(&mandt, &matnr, &ersda, &ernam, &laeda, &aenam, &vpsta, &pstat, &lvorm, &mtart, &mbrsh, &matkl, &bismt, &meins, &bstme, &zeinr, &zeiar, &zeivr, &zeifo, &aeszn, &blatt, &blanz, &ferth, &formt, &groes, &wrkst, &normt, &labor, &ekwsl, &brgew, &ntgew, &gewei, &volum, &voleh, &behvo, &raube, &tempb, &disst, &tragr, &stoff, &spart, &kunnr, &eannr, &wesch, &bwvor, &bwscl, &saiso, &etiar, &etifo, &entar, &ean11, &numtp, &laeng, &breit, &hoehe, &meabm, &prdha, &aeklk, &cadkz, &qmpur, &ergew, &ergei, &ervol, &ervoe, &gewto, &volto, &vabme, &kzrev, &kzkfg, &xchpf, &vhart, &fuelg, &stfak, &magrv, &begru, &datab, &liqdt, &saisj, &plgtp, &mlgut, &extwg, &satnr, &attyp, &kzkup, &kznfm, &pmata, &mstae, &mstav, &mstde, &mstdv, &taklv, &rbnrm, &mhdrz, &mhdhb, &mhdlp, &inhme, &inhal, &vpreh, &etiag, &inhbr, &cmeth, &cuobf, &kzumw, &kosch, &sprof, &nrfhg, &mfrpn, &mfrnr, &bmatn, &mprof, &kzwsm, &saity, &profl, &ihivi, &iloos, &serlv, &kzgvh, &xgchp, &kzeff, &compl, &iprkz, &rdmhd, &przus, &mtpos_mara, &bflme, &matfi, &cmrel, &bbtyp, &sled_bbd, &gtin_variant, &gennr, &rmatp, &gds_relevant, &weora, &hutyp_dflt, &pilferable, &whstc, &whmatgr, &hndlcode, &hazmat, &hutyp, &tare_var, &maxc, &maxc_tol, &maxl, &maxb, &maxh, &maxdim_uom, &herkl, &mfrgr, &qqtime, &qqtimeuom, &qgrp, &serial, &ps_smartform, &logunit, &cwqrel, &cwqproc, &cwqtolgr, &adprof, &ipmipproduct, &allow_pmat_igno, &medium, &bev1luleinh, &bev1luldegrp, &bev1nestruccat, &dsdsl_toltyp, &dsdsv_cnt_grp, &dsdvc_group, &vsor_tilt_ind, &vsor_stack_ind, &vsor_bot_ind, &vsor_top_ind, &vsor_stack_no, &vsor_pal_ind, &vsor_pal_ovr_d, &vsor_pal_ovr_w, &vsor_pal_b_ht, &vsor_pal_min_h, &vsor_tol_b_ht, &vsor_no_p_gvh, &vsor_quan_unit, &vsor_kzgvh_ind, &packcode, &dg_pack_status, &mcond, &retdelc, &loglev_reto, &nsnid, &imatn, &picnum, &bstat, &color_atinn, &size1_atinn, &size2_atinn, &color, &size1, &size2, &free_char, &care_code, &brand_id, &fiber_code1, &fiber_part1, &fiber_code2, &fiber_part2, &fiber_code3, &fiber_part3, &fiber_code4, &fiber_part4, &fiber_code5, &fiber_part5, &fashgrd, &menge1, &meins1, &menge2, &meins2, &zmattype, &zzcert); err != nil {
+			if err := rows.Scan(&mandt, &matnr, &ersda, &ernam, &laeda, &aenam, &vpsta, &pstat, &lvorm, &mtart, &mbrsh, &matkl, &bismt, &meins, &bstme, &zeinr, &zeiar, &zeivr, &zeifo, &aeszn, &blatt, &blanz, &ferth, &formt, &groes, &wrkst, &normt, &labor, &ekwsl, &brgew, &ntgew, &gewei, &volum, &voleh, &behvo, &raube, &tempb, &disst, &tragr, &stoff, &spart, &kunnr, &eannr, &wesch, &bwvor, &bwscl, &saiso, &etiar, &etifo, &entar, &ean11, &numtp, &laeng, &breit, &hoehe, &meabm, &prdha, &aeklk, &cadkz, &qmpur, &ergew, &ergei, &ervol, &ervoe, &gewto, &volto, &vabme, &kzrev, &kzkfg, &xchpf, &vhart, &fuelg, &stfak, &magrv, &begru, &datab, &liqdt, &saisj, &plgtp, &mlgut, &extwg, &satnr, &attyp, &kzkup, &kznfm, &pmata, &mstae, &mstav, &mstde, &mstdv, &taklv, &rbnrm, &mhdrz, &mhdhb, &mhdlp, &inhme, &inhal, &vpreh, &etiag, &inhbr, &cmeth, &cuobf, &kzumw, &kosch, &sprof, &nrfhg, &mfrpn, &mfrnr, &bmatn, &mprof, &kzwsm, &saity, &profl, &ihivi, &iloos, &serlv, &kzgvh, &xgchp, &kzeff, &compl, &iprkz, &rdmhd, &przus, &mtpos_mara, &bflme, &matfi, &cmrel, &bbtyp, &sled_bbd, &gtin_variant, &gennr, &rmatp, &gds_relevant, &weora, &hutyp_dflt, &pilferable, &whstc, &whmatgr, &hndlcode, &hazmat, &hutyp, &tare_var, &maxc, &maxc_tol, &maxl, &maxb, &maxh, &maxdim_uom, &herkl, &mfrgr, &qqtime, &qqtimeuom, &qgrp, &serial, &ps_smartform, &logunit, &cwqrel, &cwqproc, &cwqtolgr, &adprof, &ipmipproduct, &allow_pmat_igno, &medium, &bev1luleinh, &bev1luldegrp, &bev1nestruccat, &dsdsl_toltyp, &dsdsv_cnt_grp, &dsdvc_group, &vsor_tilt_ind, &vsor_stack_ind, &vsor_bot_ind, &vsor_top_ind, &vsor_stack_no, &vsor_pal_ind, &vsor_pal_ovr_d, &vsor_pal_ovr_w, &vsor_pal_b_ht, &vsor_pal_min_h, &vsor_tol_b_ht, &vsor_no_p_gvh, &vsor_quan_unit, &vsor_kzgvh_ind, &packcode, &dg_pack_status, &mcond, &retdelc, &loglev_reto, &nsnid, &imatn, &picnum, &bstat, &color_atinn, &size1_atinn, &size2_atinn, &color, &size1, &size2, &free_char, &care_code, &brand_id, &fiber_code1, &fiber_part1, &fiber_code2, &fiber_part2, &fiber_code3, &fiber_part3, &fiber_code4, &fiber_part4, &fiber_code5, &fiber_part5, &fashgrd, &menge1, &meins1, &menge2, &meins2, &zmattype, &zzcert, &zzbmatnr); err != nil {
 				utils.WriteMsg("SCAN")
 				log.Fatal(err)
 			}
@@ -466,6 +492,7 @@ func main() {
 			record = append(record, meins2)
 			record = append(record, zmattype)
 			record = append(record, zzcert)
+			record = append(record, zzbmatnr)
 			w.Write(record)
 			//fmt.Println(record)
 		}
