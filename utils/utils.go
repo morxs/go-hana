@@ -102,3 +102,16 @@ func ReadCsv(f string, comma rune) (rec [][]string, count int) {
 	}
 	return WholeRecord, lineCount
 }
+
+// ConvertByteToStr = ConvertByteToStr
+func ConvertByteToStr(b []byte, bi big.Int) string {
+	//var bi big.Int
+	var z float64
+	var neg bool
+	var i int
+
+	neg, i = DecodeDecimal(b, &bi)
+	z = BigIntToFloat(neg, &bi, i)
+	//record = append(record, fmt.Sprintf("%.4f", z))
+	return fmt.Sprintf("%.4f", z)
+}
