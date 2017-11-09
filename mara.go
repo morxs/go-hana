@@ -20,10 +20,10 @@ import (
 
 type argT struct {
 	cli.Helper
-	ArgStart        string `cli:"*s" usage:"Start Date (SAP format)"`
-	ArgEnd          string `cli:"*e" usage:"End Date (SAP format)"`
-	ArgCreatedStart string `cli:"*t" usage:"Created Start Date (SAP format)"`
-	ArgCreatedEnd   string `cli:"*d" usage:"Created End Date (SAP format)"`
+	ArgStart        string `cli:"*s" usage:"PO Start Date (SAP format)"`
+	ArgEnd          string `cli:"*e" usage:"PO End Date (SAP format)"`
+	ArgCreatedStart string `cli:"*t" usage:"Material created Start Date (SAP format)"`
+	ArgCreatedEnd   string `cli:"*d" usage:"Material created End Date (SAP format)"`
 	ArgConfig       string `cli:"c" usage:"Custom config file" dft:"config.ini"`
 }
 
