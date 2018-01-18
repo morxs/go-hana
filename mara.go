@@ -90,7 +90,7 @@ const (
 )
 
 const (
-	File = "mara.csv"
+	File = "mara.xls"
 )
 
 func main() {

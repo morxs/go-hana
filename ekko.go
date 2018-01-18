@@ -228,7 +228,7 @@ and bukrs in
 )
 
 const (
-	File = "ekko.csv"
+	File = "ekko.xls"
 )
 
 func main() {

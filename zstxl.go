@@ -61,7 +61,7 @@ where tdname in
 )
 
 const (
-	File = "zstxl.csv"
+	File = "zstxl.xls"
 )
 
 func main() {

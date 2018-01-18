@@ -59,7 +59,7 @@ const (
 )
 
 const (
-	File = "tcurr.csv"
+	File = "tcurr.xls"
 )
 
 func main() {

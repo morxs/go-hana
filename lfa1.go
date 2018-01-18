@@ -77,7 +77,7 @@ and lifnr in (
 )
 
 const (
-	File = "lfa1.csv"
+	File = "lfa1.xls"
 )
 
 func main() {

@@ -42,7 +42,7 @@ where mandt = '777'`
 )
 
 const (
-	File = "t024.csv"
+	File = "t024.xls"
 )
 
 func main() {
