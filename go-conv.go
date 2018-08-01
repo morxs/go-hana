@@ -11,6 +11,8 @@ const (
 	C_TAB       = "\t"
 	C_SPACE     = " "
 	C_SEMICOLON = ";"
+	C_COMMA     = ","
+	C_PERIOD    = "."
 )
 
 func main() {
@@ -49,6 +51,10 @@ func main() {
 		tFromDelimit = C_SEMICOLON
 	case "SPACE":
 		tFromDelimit = C_SPACE
+	case "COMMA":
+		tFromDelimit = C_COMMA
+	case "PERIOD":
+		tFromDelimit = C_PERIOD
 	}
 
 	switch strings.ToUpper(*todelimitPtr) {
@@ -58,6 +64,10 @@ func main() {
 		tToDelimit = C_TAB
 	case "SPACE":
 		tToDelimit = C_SPACE
+	case "COMMA":
+		tToDelimit = C_COMMA
+	case "PERIOD":
+		tToDelimit = C_PERIOD
 	}
 
 	newContent := strings.Replace(string(read), tFromDelimit, tToDelimit, -1)
