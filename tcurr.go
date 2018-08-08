@@ -48,11 +48,7 @@ const (
 )
 
 const (
-<<<<<<< HEAD
 	cFile = "tcurr.csv"
-=======
-	File = "tcurr.xls"
->>>>>>> origin/master
 )
 
 func main() {

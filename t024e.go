@@ -25,11 +25,7 @@ where mandt = '777'`
 )
 
 const (
-<<<<<<< HEAD
 	cFile = "t024e.csv"
-=======
-	File = "t024e.xls"
->>>>>>> origin/master
 )
 
 func main() {

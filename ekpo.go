@@ -15,22 +15,8 @@ import (
 	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
-<<<<<<< HEAD
 	// cli
 	"github.com/urfave/cli"
-=======
-)
-
-type argT struct {
-	cli.Helper
-	ArgStart  string `cli:"*s" usage:"PO Start Date (SAP format)"`
-	ArgEnd    string `cli:"*e" usage:"PO End Date (SAP format)"`
-	ArgConfig string `cli:"c" usage:"Custom config file" dft:"config.ini"`
-}
-
-const (
-	driverName = "hdb"
->>>>>>> origin/master
 )
 
 const (
@@ -361,11 +347,7 @@ and b.bukrs in
 )
 
 const (
-<<<<<<< HEAD
 	cFile = "ekpo.csv"
-=======
-	File = "ekpo.xls"
->>>>>>> origin/master
 )
 
 func main() {
