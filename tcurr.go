@@ -10,23 +10,12 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-	// cli helper
-	"github.com/mkideal/cli"
 	// ini config
 	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
-)
-
-type argT struct {
-	cli.Helper
-	ArgStart  string `cli:"*s" usage:"Start Date (SAP format)"`
-	ArgEnd    string `cli:"*e" usage:"End Date (SAP format)"`
-	ArgConfig string `cli:"c" usage:"Custom config file" dft:"config.ini"`
-}
-
-const (
-	driverName = "hdb"
+	// cli
+	"github.com/urfave/cli"
 )
 
 const (
@@ -59,27 +48,55 @@ const (
 )
 
 const (
-	File = "tcurr.csv"
+	cFile = "tcurr.csv"
 )
 
 func main() {
-	cli.Run(new(argT), func(ctx *cli.Context) error {
-		argv := ctx.Argv().(*argT)
+	var sCfg, sStartDate, sEndDate string
+	var bLog bool
 
+	app := cli.NewApp()
+	app.Name = "TCURR"
+	app.Usage = "Get table TCURR"
+	app.Version = "0.1.1"
+
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:        "config, c",
+			Value:       "config.ini",
+			Usage:       "Custom config file",
+			Destination: &sCfg,
+		},
+		cli.StringFlag{
+			Name:        "start, s",
+			Usage:       "Start Date (SAP format)",
+			Destination: &sStartDate,
+		},
+		cli.StringFlag{
+			Name:        "end, e",
+			Usage:       "End Date (SAP format)",
+			Destination: &sEndDate,
+		},
+		cli.BoolFlag{
+			Name:        "log, l",
+			Hidden:      true,
+			Usage:       "Enable logging. Log filename will be <query_filename>+.log",
+			Destination: &bLog,
+		},
+	}
+
+	app.Action = func(c *cli.Context) error {
+		if sStartDate == "" || sEndDate == "" {
+			log.Fatal("You need to enter Start and End Date")
+		}
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(argv.ArgConfig)
+		iniCfg, err := ini.Load(sCfg)
 		if err != nil {
 			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
 		}
 		iniSection := iniCfg.Section("server")
-		/*
-			fmt.Println(iniSection)
-			fmt.Println(iniSection.KeyStrings())
-			fmt.Println(iniSection.Key("uid").String())
-			fmt.Println(iniSection.GetKey("uid"))
-		*/
 		iniKeyUsername := iniSection.Key("uid").String()
 		iniKeyPassword := iniSection.Key("pwd").String()
 		iniKeyHost := iniSection.Key("host").String()
@@ -87,10 +104,8 @@ func main() {
 		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
-		//fmt.Print("OPENDB...")
-		db, err := sql.Open(driverName, hdbDsn)
+		db, err := sql.Open(utils.DriverName, hdbDsn)
 		if err != nil {
-			//fmt.Print("OPENDB")
 			log.Fatal(err)
 		}
 		defer db.Close()
@@ -100,8 +115,8 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + File)
-		file, err := os.Create(File)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -109,7 +124,7 @@ func main() {
 
 		// try to query
 		utils.WriteMsg("QUERY")
-		rows, err := db.Query(tcurrSQL, argv.ArgStart, argv.ArgEnd)
+		rows, err := db.Query(tcurrSQL, sStartDate, sEndDate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -206,6 +221,13 @@ func main() {
 			utils.WriteMsg("ROWS")
 			log.Fatal(err)
 		}
+
 		return nil
-	})
+	}
+
+	// init the program
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

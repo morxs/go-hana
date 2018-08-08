@@ -10,25 +10,12 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-	// cli helper
-	"github.com/mkideal/cli"
 	// ini config
 	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
-)
-
-type argT struct {
-	cli.Helper
-	ArgStart        string `cli:"*s" usage:"Start Date (SAP format)"`
-	ArgEnd          string `cli:"*e" usage:"End Date (SAP format)"`
-	ArgCreatedStart string `cli:"*t" usage:"Created Start Date (SAP format)"`
-	ArgCreatedEnd   string `cli:"*d" usage:"Created End Date (SAP format)"`
-	ArgConfig       string `cli:"c" usage:"Custom config file" dft:"config.ini"`
-}
-
-const (
-	driverName = "hdb"
+	// cli
+	"github.com/urfave/cli"
 )
 
 const (
@@ -90,16 +77,60 @@ const (
 )
 
 const (
-	File = "mara.csv"
+	cFile = "mara.csv"
 )
 
 func main() {
-	cli.Run(new(argT), func(ctx *cli.Context) error {
-		argv := ctx.Argv().(*argT)
+	var sCfg, sStartDate, sEndDate, sCreatedStartDate, sCreatedEndDate string
+	var bLog bool
 
+	app := cli.NewApp()
+	app.Name = "MARA"
+	app.Usage = "Get table MARA"
+	app.Version = "0.1.1"
+
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:        "config, c",
+			Value:       "config.ini",
+			Usage:       "Custom config file",
+			Destination: &sCfg,
+		},
+		cli.StringFlag{
+			Name:        "start, s",
+			Usage:       "start date (sap format)",
+			Destination: &sStartDate,
+		},
+		cli.StringFlag{
+			Name:        "end, e",
+			Usage:       "end date (sap format)",
+			Destination: &sEndDate,
+		},
+		cli.StringFlag{
+			Name:        "createdStart, t",
+			Usage:       "created start date (sap format)",
+			Destination: &sCreatedStartDate,
+		},
+		cli.StringFlag{
+			Name:        "createdEnd, d",
+			Usage:       "created end date (sap format)",
+			Destination: &sCreatedEndDate,
+		},
+		cli.BoolFlag{
+			Name:        "log, l",
+			Hidden:      true,
+			Usage:       "Enable logging. Log filename will be <query_filename>+.log",
+			Destination: &bLog,
+		},
+	}
+
+	app.Action = func(c *cli.Context) error {
+		if sStartDate == "" || sEndDate == "" || sCreatedStartDate == "" || sCreatedEndDate == "" {
+			log.Fatal("You need to enter Start and End Date also Created Start and End Date")
+		}
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(argv.ArgConfig)
+		iniCfg, err := ini.Load(sCfg)
 		if err != nil {
 			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
@@ -112,7 +143,7 @@ func main() {
 		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
-		db, err := sql.Open(driverName, hdbDsn)
+		db, err := sql.Open(utils.DriverName, hdbDsn)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -123,8 +154,8 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + File)
-		file, err := os.Create(File)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -132,7 +163,7 @@ func main() {
 
 		// try to query
 		utils.WriteMsg("QUERY")
-		rows, err := db.Query(maraSQL, argv.ArgStart, argv.ArgEnd, argv.ArgCreatedStart, argv.ArgCreatedEnd)
+		rows, err := db.Query(maraSQL, sStartDate, sEndDate, sCreatedStartDate, sCreatedEndDate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -502,6 +533,14 @@ func main() {
 			utils.WriteMsg("ROWS")
 			log.Fatal(err)
 		}
+
 		return nil
-	})
+	}
+
+	// init the program
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }

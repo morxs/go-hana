@@ -9,21 +9,12 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-	// cli helper
-	"github.com/mkideal/cli"
 	// ini config
 	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
-)
-
-type argT struct {
-	cli.Helper
-	ArgConfig string `cli:"c" usage:"Custom config file" dft:"config.ini"`
-}
-
-const (
-	driverName = "hdb"
+	// cli
+	"github.com/urfave/cli"
 )
 
 const (
@@ -34,16 +25,37 @@ where mandt = '777'`
 )
 
 const (
-	File = "t024e.csv"
+	cFile = "t024e.csv"
 )
 
 func main() {
-	cli.Run(new(argT), func(ctx *cli.Context) error {
-		argv := ctx.Argv().(*argT)
+	var sCfg, sStartDate, sEndDate string
+	var bLog bool
 
+	app := cli.NewApp()
+	app.Name = "T024E"
+	app.Usage = "Get table T024E"
+	app.Version = "0.1.1"
+
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:        "config, c",
+			Value:       "config.ini",
+			Usage:       "Custom config file",
+			Destination: &sCfg,
+		},
+		cli.BoolFlag{
+			Name:        "log, l",
+			Hidden:      true,
+			Usage:       "Enable logging. Log filename will be <query_filename>+.log",
+			Destination: &bLog,
+		},
+	}
+
+	app.Action = func(c *cli.Context) error {
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(argv.ArgConfig)
+		iniCfg, err := ini.Load(sCfg)
 		if err != nil {
 			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
@@ -56,7 +68,7 @@ func main() {
 		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
-		db, err := sql.Open(driverName, hdbDsn)
+		db, err := sql.Open(utils.DriverName, hdbDsn)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -67,8 +79,8 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + File)
-		file, err := os.Create(File)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -138,5 +150,11 @@ func main() {
 			log.Fatal(err)
 		}
 		return nil
-	})
+	}
+
+	// init the program
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
