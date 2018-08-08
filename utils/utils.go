@@ -9,12 +9,17 @@ import (
 	"os"
 )
 
+const (
+	// DriverName - Default driver name for HANA DB from SAP
+	DriverName = "hdb"
+)
+
 //WriteMsg - Just a wrapper of fmt.Print()
 func WriteMsg(s string) {
 	fmt.Println(s)
 }
 
-// DecodeDecimal - What the Hell
+// DecodeDecimal - Copy code from SAP drive to enable decode Decimals
 func DecodeDecimal(b []byte, m *big.Int) (bool, int) {
 
 	//bigint word size (*--> src/pkg/math/big/arith.go)

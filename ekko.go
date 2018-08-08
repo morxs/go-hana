@@ -14,8 +14,22 @@ import (
 	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
+<<<<<<< HEAD
 	// cli
 	"github.com/urfave/cli"
+=======
+)
+
+type argT struct {
+	cli.Helper
+	ArgStart  string `cli:"*s" usage:"PO Start Date (SAP format)"`
+	ArgEnd    string `cli:"*e" usage:"PO End Date (SAP format)"`
+	ArgConfig string `cli:"c" usage:"Custom config file" dft:"config.ini"`
+}
+
+const (
+	driverName = "hdb"
+>>>>>>> origin/master
 )
 
 const (
@@ -217,7 +231,11 @@ and bukrs in
 )
 
 const (
+<<<<<<< HEAD
 	cFile = "ekko.csv"
+=======
+	File = "ekko.xls"
+>>>>>>> origin/master
 )
 
 func main() {
@@ -384,6 +402,7 @@ func main() {
 			neg, i = utils.DecodeDecimal(zbd1t, &bi)
 			z = utils.BigIntToFloat(neg, &bi, i)
 			record = append(record, fmt.Sprintf("%.4f", z))
+			// record = append(record, utils.ConvertByteToStr(zbd1t))
 
 			neg, i = utils.DecodeDecimal(zbd2t, &bi)
 			z = utils.BigIntToFloat(neg, &bi, i)

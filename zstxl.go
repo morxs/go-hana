@@ -50,7 +50,11 @@ where tdname in
 )
 
 const (
+<<<<<<< HEAD
 	cFile = "zstxl.csv"
+=======
+	File = "zstxl.xls"
+>>>>>>> origin/master
 )
 
 func init() {
