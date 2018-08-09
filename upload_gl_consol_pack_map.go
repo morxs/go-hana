@@ -122,6 +122,7 @@ func main() {
 	}
 }
 
+// NewNullString - Enable Nullable SQL string
 func NewNullString(s string) sql.NullString {
 	if len(s) == 0 {
 		return sql.NullString{}
