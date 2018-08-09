@@ -78,10 +78,9 @@ and bukrs in
 'MJ', 'MO', 'NI', 'PA', 'PF', 'PR', 'PT', 'PV', 'PX', 'RA', 'RJ',
 'SB', 'SJ', 'SN', 'SV', 'SX', 'TB', 'TC', 'TM', 'TN', 'UD', 'UI', 'WJ',
 'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')`
-		cFile = "ekko.csv"
 	)
 
-	var sCfg, sStartDate, sEndDate string
+	var sCfg, sStartDate, sEndDate, sOutputFile string
 	var bLog bool
 
 	app := cli.NewApp()
@@ -110,7 +109,7 @@ and bukrs in
 			Name:        "output, o",
 			Usage:       "Output file",
 			Value:       "ekko.csv",
-			Destination: &sEndDate,
+			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{
 			Name:        "log, l",
@@ -132,19 +131,6 @@ and bukrs in
 		if err != nil {
 			log.Fatal(err)
 		}
-		/*
-			iniCfg, err := ini.Load(sCfg)
-			if err != nil {
-				utils.WriteMsg("CONFIG")
-				log.Fatal(err)
-			}
-			iniSection := iniCfg.Section("server")
-			iniKeyUsername := iniSection.Key("uid").String()
-			iniKeyPassword := iniSection.Key("pwd").String()
-			iniKeyHost := iniSection.Key("host").String()
-			iniKeyPort := iniSection.Key("port").String()
-			hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
-		*/
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
@@ -158,8 +144,8 @@ and bukrs in
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + cFile)
-		file, err := os.Create(cFile)
+		utils.WriteMsg("CREATE FILE: " + sOutputFile)
+		file, err := os.Create(sOutputFile)
 		if err != nil {
 			log.Fatal(err)
 		}
