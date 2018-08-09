@@ -10,16 +10,17 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-	// ini config
-	"github.com/go-ini/ini"
+
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
 	"github.com/urfave/cli"
 )
 
-const (
-	lfa1SQL = `select
+func main() {
+
+	const (
+		lfa1SQL = `select
 MANDT
 , LIFNR, LAND1, NAME1, NAME2, NAME3
 , NAME4, ORT01, ORT02, PFACH, PSTL2
@@ -63,14 +64,9 @@ and lifnr in (
 	'SB', 'SJ', 'SN', 'SV', 'SX', 'TB', 'TC', 'TM', 'TN', 'UD', 'UI', 'WJ',
 	'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')
 )`
-)
+	)
 
-const (
-	cFile = "lfa1.csv"
-)
-
-func main() {
-	var sCfg, sStartDate, sEndDate string
+	var sCfg, sStartDate, sEndDate, sOutputFile string
 	var bLog bool
 
 	app := cli.NewApp()
@@ -95,6 +91,12 @@ func main() {
 			Usage:       "End Date (SAP format)",
 			Destination: &sEndDate,
 		},
+		cli.StringFlag{
+			Name:        "output, o",
+			Usage:       "Output file",
+			Value:       "lfa1.csv",
+			Destination: &sOutputFile,
+		},
 		cli.BoolFlag{
 			Name:        "log, l",
 			Hidden:      true,
@@ -109,17 +111,10 @@ func main() {
 		}
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(sCfg)
+		hdbDsn, err := utils.ReadConfig(sCfg)
 		if err != nil {
-			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
 		}
-		iniSection := iniCfg.Section("server")
-		iniKeyUsername := iniSection.Key("uid").String()
-		iniKeyPassword := iniSection.Key("pwd").String()
-		iniKeyHost := iniSection.Key("host").String()
-		iniKeyPort := iniSection.Key("port").String()
-		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
@@ -133,8 +128,8 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + cFile)
-		file, err := os.Create(cFile)
+		utils.WriteMsg("CREATE FILE: " + sOutputFile)
+		file, err := os.Create(sOutputFile)
 		if err != nil {
 			log.Fatal(err)
 		}
