@@ -10,7 +10,6 @@ import (
 	"os"
 
 	"github.com/go-ini/ini"
-	"github.com/morxs/go-hana/utils"
 )
 
 const (
@@ -22,7 +21,7 @@ const (
 func ReadConfig(p string) string {
 	iniCfg, err := ini.Load(p)
 	if err != nil {
-		utils.WriteMsg("CONFIG")
+		WriteMsg("CONFIG")
 		log.Fatal(err)
 	}
 	iniSection := iniCfg.Section("server")
