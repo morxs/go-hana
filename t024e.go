@@ -29,7 +29,7 @@ const (
 )
 
 func main() {
-	var sCfg, sStartDate, sEndDate string
+	var sCfg string
 	var bLog bool
 
 	app := cli.NewApp()
