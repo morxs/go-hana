@@ -9,18 +9,21 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-	// cli helper
-	"github.com/mkideal/cli"
+
+	"github.com/urfave/cli"
+
 	// ini config
 	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
 )
 
+/*
 type argT struct {
 	cli.Helper
 	ArgConfig string `cli:"c" usage:"Custom config file" dft:"config.ini"`
 }
+*/
 
 const (
 	driverName = "hdb"
@@ -45,16 +48,30 @@ from z_wilmar_consodb.consolpack_rtemplate`
 )
 
 const (
-	File = "consolpack_rtemplate.csv"
+	cFile = "consolpack_rtemplate.csv"
 )
 
 func main() {
-	cli.Run(new(argT), func(ctx *cli.Context) error {
-		argv := ctx.Argv().(*argT)
+	var sCfg string
 
+	app := cli.NewApp()
+	app.Name = "consolpack_rtemplate"
+	app.Usage = "Get consolpack template"
+	app.Version = "0.0.1"
+
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:        "config, c",
+			Value:       "config.ini",
+			Usage:       "Custom config file",
+			Destination: &sCfg,
+		},
+	}
+
+	app.Action = func(c *cli.Context) error {
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(argv.ArgConfig)
+		iniCfg, err := ini.Load(sCfg)
 		if err != nil {
 			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
@@ -86,8 +103,8 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + File)
-		file, err := os.Create(File)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -146,6 +163,109 @@ func main() {
 			utils.WriteMsg("ROWS")
 			log.Fatal(err)
 		}
+
 		return nil
-	})
+	}
+
+	// init the program
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	/*
+		cli.Run(new(argT), func(ctx *cli.Context) error {
+			argv := ctx.Argv().(*argT)
+
+			// read config file
+			utils.WriteMsg("READ CONFIG")
+			iniCfg, err := ini.Load(argv.ArgConfig)
+			if err != nil {
+				utils.WriteMsg("CONFIG")
+				log.Fatal(err)
+			}
+			iniSection := iniCfg.Section("server")
+			iniKeyUsername := iniSection.Key("uid").String()
+			iniKeyPassword := iniSection.Key("pwd").String()
+			iniKeyHost := iniSection.Key("host").String()
+			iniKeyPort := iniSection.Key("port").String()
+			hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
+
+			utils.WriteMsg("OPEN HDB")
+			//fmt.Print("OPENDB...")
+			db, err := sql.Open(driverName, hdbDsn)
+			if err != nil {
+				//fmt.Print("OPENDB")
+				log.Fatal(err)
+			}
+			defer db.Close()
+
+			if err := db.Ping(); err != nil {
+				log.Fatal(err)
+			}
+
+			// create file
+			utils.WriteMsg("CREATE FILE: " + cFile)
+			file, err := os.Create(cFile)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer file.Close()
+
+			// try to query
+			utils.WriteMsg("QUERY")
+			rows, err := db.Query(CPASQL)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer rows.Close()
+
+			// prepare file
+			utils.WriteMsg("WRITE CSV")
+			w := csv.NewWriter(file)
+			w.Comma = ';'
+
+			fmt.Println(rows.Columns())
+			// add header to file
+			rs, _ := rows.Columns()
+			var rec []string
+			for i := 0; i < len(rs); i++ {
+				rec = append(rec, rs[i])
+			}
+			w.Write(rec)
+
+			for rows.Next() {
+				var report, reportworksheet_id, worksheet_id, worksheet_desc, report_table, gl_account, transaction_type, gl_account_sort, transaction_type_sort, header_gl_account, sign, header_trx_type, header_worksheet string
+				if err := rows.Scan(&report, &reportworksheet_id, &worksheet_id, &worksheet_desc, &report_table, &gl_account, &transaction_type, &gl_account_sort, &transaction_type_sort, &header_gl_account, &sign, &header_trx_type, &header_worksheet); err != nil {
+					utils.WriteMsg("SCAN")
+					log.Fatal(err)
+				}
+
+				var record []string
+
+				record = append(record, report)
+				record = append(record, reportworksheet_id)
+				record = append(record, worksheet_id)
+				record = append(record, worksheet_desc)
+				record = append(record, report_table)
+				record = append(record, gl_account)
+				record = append(record, transaction_type)
+				record = append(record, gl_account_sort)
+				record = append(record, transaction_type_sort)
+				record = append(record, header_gl_account)
+				record = append(record, sign)
+				record = append(record, header_trx_type)
+				record = append(record, header_worksheet)
+
+				w.Write(record)
+			}
+			w.Flush()
+
+			if err := rows.Err(); err != nil {
+				utils.WriteMsg("ROWS")
+				log.Fatal(err)
+			}
+			return nil
+		})
+	*/
 }
