@@ -26,10 +26,6 @@ type argT struct {
 */
 
 const (
-	driverName = "hdb"
-)
-
-const (
 	CPASQL = `select
 "REPORT",
 "ReportWorksheet ID" as "ReportWorksheet_ID",
@@ -91,7 +87,7 @@ func main() {
 
 		utils.WriteMsg("OPEN HDB")
 		//fmt.Print("OPENDB...")
-		db, err := sql.Open(driverName, hdbDsn)
+		db, err := sql.Open(utils.DriverName, hdbDsn)
 		if err != nil {
 			//fmt.Print("OPENDB")
 			log.Fatal(err)
