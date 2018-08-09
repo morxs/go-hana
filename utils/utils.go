@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
-	"log"
 	"math"
 	"math/big"
 	"os"
@@ -18,11 +17,12 @@ const (
 )
 
 // ReadConfig - Read config from ini files
-func ReadConfig(p string) string {
+func ReadConfig(p string) (string, error) {
 	iniCfg, err := ini.Load(p)
 	if err != nil {
 		WriteMsg("CONFIG")
-		log.Fatal(err)
+		// log.Fatal(err)
+		return nil, err
 	}
 	iniSection := iniCfg.Section("server")
 	iniKeyUsername := iniSection.Key("uid").String()
@@ -31,7 +31,7 @@ func ReadConfig(p string) string {
 	iniKeyPort := iniSection.Key("port").String()
 	hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
-	return hdbDsn
+	return hdbDsn, nil
 }
 
 //WriteMsg - Just a wrapper of fmt.Print()
