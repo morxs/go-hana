@@ -9,26 +9,21 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-	// ini config
-	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
 	"github.com/urfave/cli"
 )
 
-const (
-	t024eSQL = `select
+func main() {
+	const (
+		t024eSQL = `select
 *
 from z_wilmar1.t024e
 where mandt = '777'`
-)
+		cFile = "t024e.csv"
+	)
 
-const (
-	cFile = "t024e.csv"
-)
-
-func main() {
 	var sCfg string
 	var bLog bool
 
@@ -55,17 +50,10 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(sCfg)
+		hdbDsn, err := utils.ReadConfig(sCfg)
 		if err != nil {
-			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
 		}
-		iniSection := iniCfg.Section("server")
-		iniKeyUsername := iniSection.Key("uid").String()
-		iniKeyPassword := iniSection.Key("pwd").String()
-		iniKeyHost := iniSection.Key("host").String()
-		iniKeyPort := iniSection.Key("port").String()
-		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)

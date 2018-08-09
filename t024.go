@@ -17,8 +17,9 @@ import (
 	"github.com/urfave/cli"
 )
 
-const (
-	t024SQL = `select
+func main() {
+	const (
+		t024SQL = `select
 MANDT
 , EKGRP
 , EKNAM
@@ -30,13 +31,9 @@ MANDT
 , SMTP_ADDR
 from z_wilmar1.t024
 where mandt = '777'`
-)
+		cFile = "t024.csv"
+	)
 
-const (
-	cFile = "t024.csv"
-)
-
-func main() {
 	var sCfg string
 	var bLog bool
 
