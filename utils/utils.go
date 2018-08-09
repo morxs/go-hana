@@ -4,15 +4,36 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"math/big"
 	"os"
+
+	"github.com/go-ini/ini"
+	"github.com/morxs/go-hana/utils"
 )
 
 const (
 	// DriverName - Default driver name for HANA DB from SAP
 	DriverName = "hdb"
 )
+
+// ReadConfig - Read config from ini files
+func ReadConfig(p string) string {
+	iniCfg, err := ini.Load(p)
+	if err != nil {
+		utils.WriteMsg("CONFIG")
+		log.Fatal(err)
+	}
+	iniSection := iniCfg.Section("server")
+	iniKeyUsername := iniSection.Key("uid").String()
+	iniKeyPassword := iniSection.Key("pwd").String()
+	iniKeyHost := iniSection.Key("host").String()
+	iniKeyPort := iniSection.Key("port").String()
+	hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
+
+	return hdbDsn
+}
 
 //WriteMsg - Just a wrapper of fmt.Print()
 func WriteMsg(s string) {
