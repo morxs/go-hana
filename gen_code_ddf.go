@@ -10,16 +10,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-const (
-	Filename              = "ddf.csv"
-	MaxField              = 5
-	AppendStringTemplate  = "record = append(record, $)"
-	AppendIntTemplate     = "record = append(record, strconv.Itoa($))"
-	AppendDecimalTemplate = `neg, i = utils.DecodeDecimal($, &bi)
-z = utils.BigIntToFloat(neg, &bi, i)
-record = append(record, fmt.Sprintf("%.4f", z))`
-)
-
 /*
 type struct DDL {
     Name string
@@ -27,6 +17,16 @@ type struct DDL {
 }*/
 
 func main() {
+	const (
+		Filename              = "ddf.csv"
+		MaxField              = 5
+		AppendStringTemplate  = "record = append(record, $)"
+		AppendIntTemplate     = "record = append(record, strconv.Itoa($))"
+		AppendDecimalTemplate = `neg, i = utils.DecodeDecimal($, &bi)
+z = utils.BigIntToFloat(neg, &bi, i)
+record = append(record, fmt.Sprintf("%.4f", z))`
+	)
+
 	var sCSVFile string
 
 	app := cli.NewApp()
