@@ -10,8 +10,7 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-	// ini config
-	"github.com/go-ini/ini"
+
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
@@ -262,17 +261,23 @@ func main() {
 
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(sCfg)
+		hdbDsn, err := utils.ReadConfig(sCfg)
 		if err != nil {
-			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
 		}
-		iniSection := iniCfg.Section("server")
-		iniKeyUsername := iniSection.Key("uid").String()
-		iniKeyPassword := iniSection.Key("pwd").String()
-		iniKeyHost := iniSection.Key("host").String()
-		iniKeyPort := iniSection.Key("port").String()
-		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
+		/*
+			iniCfg, err := ini.Load(sCfg)
+			if err != nil {
+				utils.WriteMsg("CONFIG")
+				log.Fatal(err)
+			}
+			iniSection := iniCfg.Section("server")
+			iniKeyUsername := iniSection.Key("uid").String()
+			iniKeyPassword := iniSection.Key("pwd").String()
+			iniKeyHost := iniSection.Key("host").String()
+			iniKeyPort := iniSection.Key("port").String()
+			hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
+		*/
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
