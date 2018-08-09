@@ -22,7 +22,7 @@ func ReadConfig(p string) (string, error) {
 	if err != nil {
 		WriteMsg("CONFIG")
 		// log.Fatal(err)
-		return nil, err
+		return "", err
 	}
 	iniSection := iniCfg.Section("server")
 	iniKeyUsername := iniSection.Key("uid").String()
