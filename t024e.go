@@ -21,10 +21,9 @@ func main() {
 *
 from z_wilmar1.t024e
 where mandt = '777'`
-		cFile = "t024e.csv"
 	)
 
-	var sCfg string
+	var sCfg, sOutputFile string
 	var bLog bool
 
 	app := cli.NewApp()
@@ -38,6 +37,12 @@ where mandt = '777'`
 			Value:       "config.ini",
 			Usage:       "Custom config file",
 			Destination: &sCfg,
+		},
+		cli.StringFlag{
+			Name:        "output, o",
+			Usage:       "Output file",
+			Value:       "t024e.csv",
+			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{
 			Name:        "log, l",
@@ -67,8 +72,8 @@ where mandt = '777'`
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + cFile)
-		file, err := os.Create(cFile)
+		utils.WriteMsg("CREATE FILE: " + sOutputFile)
+		file, err := os.Create(sOutputFile)
 		if err != nil {
 			log.Fatal(err)
 		}
