@@ -1,3 +1,4 @@
+@echo off
 echo "Build main program"
 go build -ldflags "-s -w" ekko.go 
 go build -ldflags "-s -w" ekpo.go
