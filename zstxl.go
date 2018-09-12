@@ -28,13 +28,13 @@ TDID,
 TDSPRAS,
 LINNO,
 TDLINE
-from z_wilmar1.zstxl
+from sapabap1.zstxl
 where tdname in
 (
 	select
 	concat(a.ebeln,a.ebelp) as "TDNAME"
-	from z_wilmar1.ekpo a
-	left join z_wilmar1.ekko b
+	from sapabap1.ekpo a
+	left join sapabap1.ekko b
 	on a.mandt = b.mandt
 	and a.ebeln = b.ebeln
 	where b.aedat between ? and ?

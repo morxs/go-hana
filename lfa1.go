@@ -46,12 +46,12 @@ MANDT
 , PSOFG, PSOIS, PSON1, PSON2, PSON3
 , PSOVN, PSOTL, PSOHS, PSOST, TRANSPORT_CHAIN
 , STAGING_TIME, SCHEDULING_TYPE, SUBMI_RELEVANT, ETHNIC, CATEGORY
-from z_wilmar1.lfa1
+from sapabap1.lfa1
 where mandt = '777'
 and lifnr in (
 	select 
 	distinct lifnr
-	from z_wilmar1.ekko
+	from sapabap1.ekko
 	where bedat between ? and ?
 	and bstyp = 'F'
 	and (bsart like '%20' or bsart like '%25')

@@ -28,7 +28,7 @@ MANDT
 , TEL_NUMBER
 , TEL_EXTENS
 , SMTP_ADDR
-from z_wilmar1.t024
+from sapabap1.t024
 where mandt = '777'`
 	)
 

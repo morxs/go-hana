@@ -19,7 +19,7 @@ func main() {
 	const (
 		t024eSQL = `select
 *
-from z_wilmar1.t024e
+from sapabap1.t024e
 where mandt = '777'`
 	)
 

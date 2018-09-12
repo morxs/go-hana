@@ -66,7 +66,7 @@ MANDT
 , OTB_VALUE, OTB_CURR, OTB_RES_VALUE, OTB_SPEC_VALUE
 , SPR_RSN_PROFILE, BUDG_TYPE, OTB_STATUS, OTB_REASON
 , CHECK_TYPE, CON_OTB_REQ, CON_PREBOOK_LEV, CON_DISTR_LEV
-from z_wilmar1.ekko
+from sapabap1.ekko
 where bedat between ? and ?
 and bstyp = 'F'
 and (bsart like '%20' or bsart like '%25')
