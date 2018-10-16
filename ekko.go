@@ -108,7 +108,7 @@ and bukrs in
 		cli.StringFlag{
 			Name:        "output, o",
 			Usage:       "Output file",
-			Value:       "ekko.csv",
+			Value:       "ekko.xls",
 			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{

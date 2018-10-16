@@ -77,7 +77,7 @@ where tdname in
 		cli.StringFlag{
 			Name:        "output, o",
 			Usage:       "Output file",
-			Value:       "zstxl.csv",
+			Value:       "zstxl.xls",
 			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{

@@ -50,7 +50,7 @@ where mandt = '777'`
 		cli.StringFlag{
 			Name:        "output, o",
 			Usage:       "Output file",
-			Value:       "t024.csv",
+			Value:       "t024.xls",
 			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{

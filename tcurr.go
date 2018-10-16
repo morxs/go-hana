@@ -75,7 +75,7 @@ func main() {
 		cli.StringFlag{
 			Name:        "output, o",
 			Usage:       "Output file",
-			Value:       "tcurr.csv",
+			Value:       "tcurr.xls",
 			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{

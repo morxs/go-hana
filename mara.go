@@ -114,7 +114,7 @@ func main() {
 		cli.StringFlag{
 			Name:        "output, o",
 			Usage:       "Output file",
-			Value:       "mara.csv",
+			Value:       "mara.xls",
 			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{

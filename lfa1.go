@@ -94,7 +94,7 @@ and lifnr in (
 		cli.StringFlag{
 			Name:        "output, o",
 			Usage:       "Output file",
-			Value:       "lfa1.csv",
+			Value:       "lfa1.xls",
 			Destination: &sOutputFile,
 		},
 		cli.BoolFlag{
