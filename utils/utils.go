@@ -1,12 +1,14 @@
 package utils
 
 import (
+	"database/sql/driver"
 	"encoding/csv"
 	"fmt"
 	"io"
 	"math"
 	"math/big"
 	"os"
+	"time"
 
 	"github.com/go-ini/ini"
 )
@@ -15,6 +17,26 @@ const (
 	// DriverName - Default driver name for HANA DB from SAP
 	DriverName = "hdb"
 )
+
+// NullTime - Nullable time.Time
+type NullTime struct {
+	time.Time
+	Valid bool
+}
+
+// Scan implements the Scanner interface.
+func (nt *NullTime) Scan(value interface{}) error {
+	nt.Time, nt.Valid = value.(time.Time)
+	return nil
+}
+
+// Value implements the driver Valuer interface.
+func (nt NullTime) Value() (driver.Value, error) {
+	if !nt.Valid {
+		return nil, nil
+	}
+	return nt.Time, nil
+}
 
 // ReadConfig - Read config from ini files
 func ReadConfig(p string) (string, error) {
@@ -37,7 +59,7 @@ func ReadConfig(p string) (string, error) {
 	return hdbDsn, nil
 }
 
-//WriteMsg - Just a wrapper of fmt.Print()
+// WriteMsg - Just a wrapper of fmt.Print()
 func WriteMsg(s string) {
 	fmt.Println(s)
 }
