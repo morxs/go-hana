@@ -18,6 +18,9 @@ const (
 
 // ReadConfig - Read config from ini files
 func ReadConfig(p string) (string, error) {
+	if p == "" {
+		p = "config.ini"
+	}
 	iniCfg, err := ini.Load(p)
 	if err != nil {
 		WriteMsg("CONFIG")
