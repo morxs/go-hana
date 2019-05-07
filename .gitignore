@@ -9,3 +9,5 @@
 *.zip.*
 /pkg
 /src/
+/.vscode/
+/zz/
