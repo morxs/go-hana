@@ -10,63 +10,198 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-
+	// ini config
+	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
 	"github.com/urfave/cli"
 )
 
-func main() {
-	const (
-		ekkoSQL = `select
+const (
+	ekkoSQL = `select
 MANDT
-, EBELN, BUKRS, BSTYP, BSART
-, BSAKZ, LOEKZ, STATU, AEDAT
-, ERNAM, PINCR, LPONR, LIFNR
-, SPRAS, ZTERM, ZBD1T, ZBD2T
-, ZBD3T, ZBD1P, ZBD2P, EKORG
-, EKGRP, WAERS, WKURS, KUFIX
-, BEDAT, KDATB, KDATE, BWBDT
-, ANGDT, BNDDT, GWLDT, AUSNR
-, ANGNR, IHRAN, IHREZ, VERKF
-, TELF1, LLIEF, KUNNR, KONNR
-, ABGRU, AUTLF, WEAKT, RESWK
-, LBLIF, INCO1, INCO2, KTWRT
-, SUBMI, KNUMV, KALSM, STAFO
-, LIFRE, EXNUM, UNSEZ, LOGSY
-, UPINC, STAKO, FRGGR, FRGSX
-, FRGKE, FRGZU, FRGRL, LANDS
-, LPHIS, ADRNR, STCEG_L, STCEG
-, ABSGR, ADDNR, KORNR, MEMORY
-, PROCSTAT, RLWRT, REVNO, SCMPROC
-, REASON_CODE, MEMORYTYPE, RETTP, RETPC
-, DPTYP, DPPCT, DPAMT, DPDAT
-, MSR_ID, HIERARCHY_EXISTS, THRESHOLD_EXISTS, LEGAL_CONTRACT
-, DESCRIPTION, RELEASE_DATE, FORCE_ID, FORCE_CNT
-, RELOC_ID, RELOC_SEQ_ID, ZZVESSEL, ZZTRANS_VSL
-, ZZTRUCK_NO, ZZDO_SO, ZZMTART, ZZREF
-, ZZTYPE, ZZERZET, ZZVOYAGE, ZZBEZET
-, ZZMPOB, ZZFINAL, ZZSAILDATE, ZZQTYOFCONT
-, ZZBROKER, ZZTYPEKONT, ZZCONT, ZZVAT_TERM
-, ZZUPD_PLAN, ZZCPNO, ZZCPITEM, ZZNOPRINT_TERM
-, ZZDP, ZZORIGIN, ZZIMPTXT, ZZSEALNO
-, ZZCONNM, ZZPIBNO, ZZXYEAR, ZZPIBPORT
-, ZZKPPBC_P, ZZMERGE_PRC, ZZTANKERNO, ZZBILL_ADRCO
-, ZZFRGTXT, ZZISCC, ZZWBREF, ZZTMP_CTR_NO
-, ZZDEM_COST, ZZDEM_COST_CCY, ZZDEM_TAX, ZZDEM_TAX_CCY
-, ZZORDRCV, ZZPOWOPR, ZZEXTO, ZZCARNO
-, ZZFBANO, ZZCHKAFCE, ZZOPFEE, ZZPRPEZ
-, ZZNPWP, ZZITEM, ZZAUFNR, ZZPNLTYTXT
-, ZZBLNO, ZZDATE, ZZPORT, ZZYEAR
-, POHF_TYPE, EQ_EINDT, EQ_WERKS, FIXPO
-, EKGRP_ALLOW, WERKS_ALLOW, CONTRACT_ALLOW, PSTYP_ALLOW
-, FIXPO_ALLOW, KEY_ID_ALLOW, AUREL_ALLOW, DELPER_ALLOW
-, EINDT_ALLOW, OTB_LEVEL, OTB_COND_TYPE, KEY_ID
-, OTB_VALUE, OTB_CURR, OTB_RES_VALUE, OTB_SPEC_VALUE
-, SPR_RSN_PROFILE, BUDG_TYPE, OTB_STATUS, OTB_REASON
-, CHECK_TYPE, CON_OTB_REQ, CON_PREBOOK_LEV, CON_DISTR_LEV
-from sapabap1.ekko
+, EBELN
+, BUKRS
+, BSTYP
+, BSART
+, BSAKZ
+, LOEKZ
+, STATU
+, AEDAT
+, ERNAM
+, PINCR
+, LPONR
+, LIFNR
+, SPRAS
+, ZTERM
+, ZBD1T
+, ZBD2T
+, ZBD3T
+, ZBD1P
+, ZBD2P
+, EKORG
+, EKGRP
+, WAERS
+, WKURS
+, KUFIX
+, BEDAT
+, KDATB
+, KDATE
+, BWBDT
+, ANGDT
+, BNDDT
+, GWLDT
+, AUSNR
+, ANGNR
+, IHRAN
+, IHREZ
+, VERKF
+, TELF1
+, LLIEF
+, KUNNR
+, KONNR
+, ABGRU
+, AUTLF
+, WEAKT
+, RESWK
+, LBLIF
+, INCO1
+, INCO2
+, KTWRT
+, SUBMI
+, KNUMV
+, KALSM
+, STAFO
+, LIFRE
+, EXNUM
+, UNSEZ
+, LOGSY
+, UPINC
+, STAKO
+, FRGGR
+, FRGSX
+, FRGKE
+, FRGZU
+, FRGRL
+, LANDS
+, LPHIS
+, ADRNR
+, STCEG_L
+, STCEG
+, ABSGR
+, ADDNR
+, KORNR
+, MEMORY
+, PROCSTAT
+, RLWRT
+, REVNO
+, SCMPROC
+, REASON_CODE
+, MEMORYTYPE
+, RETTP
+, RETPC
+, DPTYP
+, DPPCT
+, DPAMT
+, DPDAT
+, MSR_ID
+, HIERARCHY_EXISTS
+, THRESHOLD_EXISTS
+, LEGAL_CONTRACT
+, DESCRIPTION
+, RELEASE_DATE
+, FORCE_ID
+, FORCE_CNT
+, RELOC_ID
+, RELOC_SEQ_ID
+, ZZVESSEL
+, ZZTRANS_VSL
+, ZZTRUCK_NO
+, ZZDO_SO
+, ZZMTART
+, ZZREF
+, ZZTYPE
+, ZZERZET
+, ZZVOYAGE
+, ZZBEZET
+, ZZMPOB
+, ZZFINAL
+, ZZSAILDATE
+, ZZQTYOFCONT
+, ZZBROKER
+, ZZTYPEKONT
+, ZZCONT
+, ZZVAT_TERM
+, ZZUPD_PLAN
+, ZZCPNO
+, ZZCPITEM
+, ZZNOPRINT_TERM
+, ZZDP
+, ZZORIGIN
+, ZZIMPTXT
+, ZZSEALNO
+, ZZCONNM
+, ZZPIBNO
+, ZZXYEAR
+, ZZPIBPORT
+, ZZKPPBC_P
+, ZZMERGE_PRC
+, ZZTANKERNO
+, ZZBILL_ADRCO
+, ZZFRGTXT
+, ZZISCC
+, ZZWBREF
+, ZZTMP_CTR_NO
+, ZZDEM_COST
+, ZZDEM_COST_CCY
+, ZZDEM_TAX
+, ZZDEM_TAX_CCY
+, ZZORDRCV
+, ZZPOWOPR
+, ZZEXTO
+, ZZCARNO
+, ZZFBANO
+, ZZCHKAFCE
+, ZZOPFEE
+, ZZPRPEZ
+, ZZNPWP
+, ZZITEM
+, ZZAUFNR
+, ZZPNLTYTXT
+, ZZBLNO
+, ZZDATE
+, ZZPORT
+, ZZYEAR
+, POHF_TYPE
+, EQ_EINDT
+, EQ_WERKS
+, FIXPO
+, EKGRP_ALLOW
+, WERKS_ALLOW
+, CONTRACT_ALLOW
+, PSTYP_ALLOW
+, FIXPO_ALLOW
+, KEY_ID_ALLOW
+, AUREL_ALLOW
+, DELPER_ALLOW
+, EINDT_ALLOW
+, OTB_LEVEL
+, OTB_COND_TYPE
+, KEY_ID
+, OTB_VALUE
+, OTB_CURR
+, OTB_RES_VALUE
+, OTB_SPEC_VALUE
+, SPR_RSN_PROFILE
+, BUDG_TYPE
+, OTB_STATUS
+, OTB_REASON
+, CHECK_TYPE
+, CON_OTB_REQ
+, CON_PREBOOK_LEV
+, CON_DISTR_LEV
+from z_wilmar1.ekko
 where bedat between ? and ?
 and bstyp = 'F'
 and (bsart like '%20' or bsart like '%25')
@@ -77,10 +212,16 @@ and bukrs in
 'DB', 'DC', 'DG', 'DI', 'GA', 'GK', 'IA', 'ID', 'IE', 'IF', 'KD', 'KF', 'KG', 'MD', 'MF', 'MH',
 'MJ', 'MO', 'NI', 'PA', 'PF', 'PR', 'PT', 'PV', 'PX', 'RA', 'RJ',
 'SB', 'SJ', 'SN', 'SV', 'SX', 'TB', 'TC', 'TM', 'TN', 'UD', 'UI', 'WJ',
-'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')`
-	)
+'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')
+`
+)
 
-	var sCfg, sStartDate, sEndDate, sOutputFile string
+const (
+	cFile = "ekko.csv"
+)
+
+func main() {
+	var sCfg, sStartDate, sEndDate string
 	var bLog bool
 
 	app := cli.NewApp()
@@ -105,12 +246,6 @@ and bukrs in
 			Usage:       "End Date (SAP format)",
 			Destination: &sEndDate,
 		},
-		cli.StringFlag{
-			Name:        "output, o",
-			Usage:       "Output file",
-			Value:       "ekko.xls",
-			Destination: &sOutputFile,
-		},
 		cli.BoolFlag{
 			Name:        "log, l",
 			Hidden:      true,
@@ -127,10 +262,17 @@ and bukrs in
 
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		hdbDsn, err := utils.ReadConfig(sCfg)
+		iniCfg, err := ini.Load(sCfg)
 		if err != nil {
+			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
 		}
+		iniSection := iniCfg.Section("server")
+		iniKeyUsername := iniSection.Key("uid").String()
+		iniKeyPassword := iniSection.Key("pwd").String()
+		iniKeyHost := iniSection.Key("host").String()
+		iniKeyPort := iniSection.Key("port").String()
+		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
@@ -144,8 +286,8 @@ and bukrs in
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + sOutputFile)
-		file, err := os.Create(sOutputFile)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}
