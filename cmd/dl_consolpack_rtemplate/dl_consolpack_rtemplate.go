@@ -18,9 +18,15 @@ import (
 	"github.com/morxs/go-hana/utils"
 )
 
-func main() {
-	const (
-		CPASQL = `select
+/*
+type argT struct {
+	cli.Helper
+	ArgConfig string `cli:"c" usage:"Custom config file" dft:"config.ini"`
+}
+*/
+
+const (
+	CPASQL = `select
 "REPORT",
 "ReportWorksheet ID" as "ReportWorksheet_ID",
 "Worksheet ID" as "Worksheet_ID",
@@ -35,9 +41,13 @@ func main() {
 "Header Trx Type" as "Header_Trx_Type",
 "Header Worksheet" as "Header_Worksheet"
 from z_wilmar_consodb.consolpack_rtemplate`
-		cFile = "consolpack_rtemplate.csv"
-	)
+)
 
+const (
+	cFile = "consolpack_rtemplate.csv"
+)
+
+func main() {
 	var sCfg string
 
 	app := cli.NewApp()

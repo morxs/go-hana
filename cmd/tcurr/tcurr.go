@@ -10,16 +10,16 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-
+	// ini config
+	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
 	"github.com/urfave/cli"
 )
 
-func main() {
-	const (
-		tcurrSQL = `select MANDT,
+const (
+	tcurrSQL = `select MANDT,
 	   	KURST,
 	   	FCURR,
 	   	TCURR,
@@ -40,14 +40,19 @@ func main() {
 		FFACT as "FFACT",
 		TFACT as "TFACT",
 	   	cast(('99999999' - gdatu) as varchar(8)) as "DATUM"
-	   	from sapabap1.tcurr
+	   	from z_wilmar1.tcurr
 	   	where mandt = '777'
 		and kurst = 'M'
 	   )
 	   where "DATUM" between ? and ?`
-	)
+)
 
-	var sCfg, sStartDate, sEndDate, sOutputFile string
+const (
+	cFile = "tcurr.csv"
+)
+
+func main() {
+	var sCfg, sStartDate, sEndDate string
 	var bLog bool
 
 	app := cli.NewApp()
@@ -72,12 +77,6 @@ func main() {
 			Usage:       "End Date (SAP format)",
 			Destination: &sEndDate,
 		},
-		cli.StringFlag{
-			Name:        "output, o",
-			Usage:       "Output file",
-			Value:       "tcurr.xls",
-			Destination: &sOutputFile,
-		},
 		cli.BoolFlag{
 			Name:        "log, l",
 			Hidden:      true,
@@ -90,13 +89,19 @@ func main() {
 		if sStartDate == "" || sEndDate == "" {
 			log.Fatal("You need to enter Start and End Date")
 		}
-
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		hdbDsn, err := utils.ReadConfig(sCfg)
+		iniCfg, err := ini.Load(sCfg)
 		if err != nil {
+			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
 		}
+		iniSection := iniCfg.Section("server")
+		iniKeyUsername := iniSection.Key("uid").String()
+		iniKeyPassword := iniSection.Key("pwd").String()
+		iniKeyHost := iniSection.Key("host").String()
+		iniKeyPort := iniSection.Key("port").String()
+		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
@@ -110,8 +115,8 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + sOutputFile)
-		file, err := os.Create(sOutputFile)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}

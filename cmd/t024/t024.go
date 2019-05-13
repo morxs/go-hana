@@ -9,16 +9,16 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-
+	// ini config
+	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
 	"github.com/urfave/cli"
 )
 
-func main() {
-	const (
-		t024SQL = `select
+const (
+	t024SQL = `select
 MANDT
 , EKGRP
 , EKNAM
@@ -28,11 +28,16 @@ MANDT
 , TEL_NUMBER
 , TEL_EXTENS
 , SMTP_ADDR
-from sapabap1.t024
+from z_wilmar1.t024
 where mandt = '777'`
-	)
+)
 
-	var sCfg, sOutputFile string
+const (
+	cFile = "t024.csv"
+)
+
+func main() {
+	var sCfg string
 	var bLog bool
 
 	app := cli.NewApp()
@@ -47,12 +52,6 @@ where mandt = '777'`
 			Usage:       "Custom config file",
 			Destination: &sCfg,
 		},
-		cli.StringFlag{
-			Name:        "output, o",
-			Usage:       "Output file",
-			Value:       "t024.xls",
-			Destination: &sOutputFile,
-		},
 		cli.BoolFlag{
 			Name:        "log, l",
 			Hidden:      true,
@@ -64,10 +63,17 @@ where mandt = '777'`
 	app.Action = func(c *cli.Context) error {
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		hdbDsn, err := utils.ReadConfig(sCfg)
+		iniCfg, err := ini.Load(sCfg)
 		if err != nil {
+			utils.WriteMsg("CONFIG")
 			log.Fatal(err)
 		}
+		iniSection := iniCfg.Section("server")
+		iniKeyUsername := iniSection.Key("uid").String()
+		iniKeyPassword := iniSection.Key("pwd").String()
+		iniKeyHost := iniSection.Key("host").String()
+		iniKeyPort := iniSection.Key("port").String()
+		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
@@ -81,8 +87,8 @@ where mandt = '777'`
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + sOutputFile)
-		file, err := os.Create(sOutputFile)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}

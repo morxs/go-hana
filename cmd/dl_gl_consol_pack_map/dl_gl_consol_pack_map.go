@@ -40,9 +40,8 @@ type GLConsolPackMap struct {
 	ReportSheet     string
 }
 
-func main() {
-	const (
-		CPASQL = `SELECT
+const (
+	CPASQL = `SELECT
 YEAR
 , "Group 1"
 , "Sort 1"
@@ -58,8 +57,13 @@ YEAR
 , "REMARK"
 , "Report Sheet"
 FROM Z_WILMAR_CONSODB.GL_CONSOL_PACK_MAP`
-		cFile = "consolpack_gl_consol_pack_map.csv"
-	)
+)
+
+const (
+	cFile = "consolpack_gl_consol_pack_map.csv"
+)
+
+func main() {
 	var sCfg string
 
 	app := cli.NewApp()

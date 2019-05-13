@@ -10,16 +10,16 @@ import (
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
-
+	// ini config
+	"github.com/go-ini/ini"
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
 	"github.com/urfave/cli"
 )
 
-func main() {
-	const (
-		maraSQL = `select 
+const (
+	maraSQL = `select 
 	MANDT, MATNR, ERSDA, ERNAM, LAEDA, AENAM, VPSTA, PSTAT, LVORM, MTART, MBRSH, 
 	MATKL, BISMT, MEINS, BSTME, ZEINR, ZEIAR, ZEIVR, ZEIFO, AESZN, BLATT, BLANZ, 
 	FERTH, FORMT, GROES, WRKST, NORMT, LABOR, EKWSL, BRGEW, NTGEW, GEWEI, VOLUM, 
@@ -47,17 +47,17 @@ func main() {
 	FIBER_CODE2, FIBER_PART2, FIBER_CODE3, FIBER_PART3, FIBER_CODE4, 
 	FIBER_PART4, FIBER_CODE5, FIBER_PART5, FASHGRD, MENGE1, MEINS1, MENGE2, 
 	MEINS2, ZMATTYPE, ZZCERT, ZZBMATNR
-	from sapabap1.mara
+	from z_wilmar1.mara
 	where mandt = '777'
 	and matnr in 
 	(
 		select 
 		distinct a.matnr
-		from sapabap1.ekpo a
-		left join sapabap1.ekko b
+		from z_wilmar1.ekpo a
+		left join z_wilmar1.ekko b
 		on a.mandt = b.mandt
 		and a.ebeln = b.ebeln
-		left join sapabap1.t001 c
+		left join z_wilmar1.t001 c
 		on a.mandt = c.mandt
 		and a.bukrs = c.bukrs
 		where b.bedat between ? and ?
@@ -74,9 +74,14 @@ func main() {
 		'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')
 	)
 	and ersda between ? and ?`
-	)
+)
 
-	var sCfg, sStartDate, sEndDate, sCreatedStartDate, sCreatedEndDate, sOutputFile string
+const (
+	cFile = "mara.csv"
+)
+
+func main() {
+	var sCfg, sStartDate, sEndDate, sCreatedStartDate, sCreatedEndDate string
 	var bLog bool
 
 	app := cli.NewApp()
@@ -111,12 +116,6 @@ func main() {
 			Usage:       "created end date (sap format)",
 			Destination: &sCreatedEndDate,
 		},
-		cli.StringFlag{
-			Name:        "output, o",
-			Usage:       "Output file",
-			Value:       "mara.xls",
-			Destination: &sOutputFile,
-		},
 		cli.BoolFlag{
 			Name:        "log, l",
 			Hidden:      true,
@@ -131,7 +130,17 @@ func main() {
 		}
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		hdbDsn, err := utils.ReadConfig(sCfg)
+		iniCfg, err := ini.Load(sCfg)
+		if err != nil {
+			utils.WriteMsg("CONFIG")
+			log.Fatal(err)
+		}
+		iniSection := iniCfg.Section("server")
+		iniKeyUsername := iniSection.Key("uid").String()
+		iniKeyPassword := iniSection.Key("pwd").String()
+		iniKeyHost := iniSection.Key("host").String()
+		iniKeyPort := iniSection.Key("port").String()
+		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
@@ -145,8 +154,8 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + sOutputFile)
-		file, err := os.Create(sOutputFile)
+		utils.WriteMsg("CREATE FILE: " + cFile)
+		file, err := os.Create(cFile)
 		if err != nil {
 			log.Fatal(err)
 		}
