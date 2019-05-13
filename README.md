@@ -5,8 +5,8 @@ Is a project for Golang POC to retrieve data from HANA DB using SAP HANA DB sql 
 ## Plugins
 
 - github.com/SAP/go-hdb/driver
-- github.com/mkideal/cli
 - github.com/go-ini/ini
+- github.com/urfave/cli v1.20.0
 
 ## Config
 
@@ -17,3 +17,7 @@ Only `gen_code_ddf.go` have different configuration to generate the code for eas
 ## Usage of gen_code_ddf.go
 
 The source code is only print out to terminal. However, you can easily to use `>` to save it into file (ie `go run gen_code_ddf.go > output.txt`
+
+## Revision
+
+This repo have been on heavy project structure reorganization. Something maybe broken. xoxo
