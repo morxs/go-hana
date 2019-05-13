@@ -201,7 +201,7 @@ MANDT
 , CON_OTB_REQ
 , CON_PREBOOK_LEV
 , CON_DISTR_LEV
-from z_wilmar1.ekko
+from sapabap1.ekko
 where bedat between ? and ?
 and bstyp = 'F'
 and (bsart like '%20' or bsart like '%25')

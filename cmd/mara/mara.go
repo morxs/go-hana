@@ -47,17 +47,17 @@ const (
 	FIBER_CODE2, FIBER_PART2, FIBER_CODE3, FIBER_PART3, FIBER_CODE4, 
 	FIBER_PART4, FIBER_CODE5, FIBER_PART5, FASHGRD, MENGE1, MEINS1, MENGE2, 
 	MEINS2, ZMATTYPE, ZZCERT, ZZBMATNR
-	from z_wilmar1.mara
+	from sapabap1.mara
 	where mandt = '777'
 	and matnr in 
 	(
 		select 
 		distinct a.matnr
-		from z_wilmar1.ekpo a
-		left join z_wilmar1.ekko b
+		from sapabap1.ekpo a
+		left join sapabap1.ekko b
 		on a.mandt = b.mandt
 		and a.ebeln = b.ebeln
-		left join z_wilmar1.t001 c
+		left join sapabap1.t001 c
 		on a.mandt = c.mandt
 		and a.bukrs = c.bukrs
 		where b.bedat between ? and ?

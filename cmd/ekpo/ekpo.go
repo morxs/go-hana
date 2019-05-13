@@ -325,11 +325,11 @@ a.SOURCE_KEY,
 a.PUT_BACK, 
 a.POL_ID, 
 a.CONS_ORDER, b.bukrs, c.land1
-from z_wilmar1.ekpo a
-left join z_wilmar1.ekko b
+from sapabap1.ekpo a
+left join sapabap1.ekko b
 on a.mandt = b.mandt
 and a.ebeln = b.ebeln
-left join z_wilmar1.t001 c
+left join sapabap1.t001 c
 on a.mandt = c.mandt
 and a.bukrs = c.bukrs
 where b.bedat between ? and ?

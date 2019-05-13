@@ -40,7 +40,7 @@ const (
 		FFACT as "FFACT",
 		TFACT as "TFACT",
 	   	cast(('99999999' - gdatu) as varchar(8)) as "DATUM"
-	   	from z_wilmar1.tcurr
+	   	from sapabap1.tcurr
 	   	where mandt = '777'
 		and kurst = 'M'
 	   )
