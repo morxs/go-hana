@@ -18,10 +18,18 @@ type argT struct {
 */
 
 const (
-	Filename              = "ddf.csv"
-	MaxField              = 5
-	AppendStringTemplate  = "record = append(record, $)"
-	AppendIntTemplate     = "record = append(record, strconv.Itoa($))"
+	//Filename              = "ddf.csv"   // -- not use, removed
+
+	// MaxField -> maximum field to declare before newline applied (for easier code read)
+	MaxField = 5
+
+	// AppendStringTemplate -> template for string type
+	AppendStringTemplate = "record = append(record, $)"
+
+	// AppendIntTemplate -> template for int type
+	AppendIntTemplate = "record = append(record, strconv.Itoa($))"
+
+	// AppendDecimalTemplate --> template for decimal type
 	AppendDecimalTemplate = `neg, i = utils.DecodeDecimal($, &bi)
 z = utils.BigIntToFloat(neg, &bi, i)
 record = append(record, fmt.Sprintf("%.4f", z))`
@@ -90,7 +98,7 @@ func main() {
 		}
 
 		// variable code generation
-		fmt.Println("----------------------- VAR ----------------------")
+		fmt.Println("//----------------------- VAR ----------------------//")
 		readCount = 1
 		for i := 0; i < len(RecString); i++ {
 			if readCount%MaxField == 0 {
@@ -155,11 +163,11 @@ func main() {
 		}
 
 		// scan code generation
-		fmt.Println("----------------------- SCAN ----------------------")
+		fmt.Println("//----------------------- SCAN ----------------------//")
 		fmt.Println(ScanString)
 
 		// assignment code generation
-		fmt.Println("----------------------- APPEND ----------------------")
+		fmt.Println("//----------------------- APPEND ----------------------//")
 		for i := 0; i < len(AppendString); i++ {
 			fmt.Println(AppendString[i])
 		}
