@@ -8,11 +8,12 @@ import (
 	"math/big"
 	"os"
 	"strconv"
+	"strings"
 
 	// Register hdb driver.
 	_ "github.com/SAP/go-hdb/driver"
 	// ini config
-	"github.com/go-ini/ini"
+
 	// internal
 	"github.com/morxs/go-hana/utils"
 	// cli
@@ -338,16 +339,11 @@ and (b.bsart like '%20' or b.bsart like '%25')
 and b.loekz = ''
 and a.loekz = ''
 and b.bukrs in 
-('BM', 'BO', 'CL', 'DE', 'EB', 'EC', 'EE', 'EL', 'EP', 'ES', 'FB', 'FM', 'GM', 'GU', 'HM', 'JW', 'KI', 'KM', 'NE', 'NO', 'NS', 'NX', 'OE', 'PB', 'PE', 'PO', 'RB', 'RH', 'RM', 'SE', 'SF', 'SG', 'SH', 'SO', 'SU', 'VI', 'WH',
-'AA', 'AD', 'AG', 'AJ', 'AN', 'AP', 'BN', 'BV', 'BW', 'BX', 'BY', 'CA', 'CC', 'CX', 'DA',
-'DB', 'DC', 'DG', 'DI', 'GA', 'GK', 'IA', 'ID', 'IE', 'IF', 'KD', 'KF', 'KG', 'MD', 'MF', 'MH',
-'MJ', 'MO', 'NI', 'PA', 'PF', 'PR', 'PT', 'PV', 'PX', 'RA', 'RJ',
-'SB', 'SJ', 'SN', 'SV', 'SX', 'TB', 'TC', 'TM', 'TN', 'UD', 'UI', 'WJ',
-'BD', 'OU', 'WL', 'GS', 'BZ', 'SZ', 'WR', 'WF', 'BC', 'EY')`
+($$coy$$)`
 )
 
 const (
-	cFile = "ekpo.csv"
+	cFile = "ekpo"
 )
 
 func main() {
@@ -392,17 +388,19 @@ func main() {
 
 		// read config file
 		utils.WriteMsg("READ CONFIG")
-		iniCfg, err := ini.Load(sCfg)
-		if err != nil {
-			utils.WriteMsg("CONFIG")
-			log.Fatal(err)
-		}
-		iniSection := iniCfg.Section("server")
-		iniKeyUsername := iniSection.Key("uid").String()
-		iniKeyPassword := iniSection.Key("pwd").String()
-		iniKeyHost := iniSection.Key("host").String()
-		iniKeyPort := iniSection.Key("port").String()
-		hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
+		hdbDsn, extension, err := utils.ReadConfig(sCfg)
+
+		// iniCfg, err := ini.Load(sCfg)
+		// if err != nil {
+		// 	utils.WriteMsg("CONFIG")
+		// 	log.Fatal(err)
+		// }
+		// iniSection := iniCfg.Section("server")
+		// iniKeyUsername := iniSection.Key("uid").String()
+		// iniKeyPassword := iniSection.Key("pwd").String()
+		// iniKeyHost := iniSection.Key("host").String()
+		// iniKeyPort := iniSection.Key("port").String()
+		// hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
 		utils.WriteMsg("OPEN HDB")
 		db, err := sql.Open(utils.DriverName, hdbDsn)
@@ -416,8 +414,9 @@ func main() {
 		}
 
 		// create file
-		utils.WriteMsg("CREATE FILE: " + cFile)
-		file, err := os.Create(cFile)
+		filename := cFile + "." + extension
+		utils.WriteMsg("CREATE FILE: " + filename)
+		file, err := os.Create(filename)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -425,7 +424,8 @@ func main() {
 
 		// try to query
 		utils.WriteMsg("QUERY")
-		rows, err := db.Query(ekpoSQL, sStartDate, sEndDate)
+		sql := strings.Replace(ekpoSQL, "$$coy$$", utils.AfricaCoy, -1)
+		rows, err := db.Query(sql, sStartDate, sEndDate)
 		if err != nil {
 			log.Fatal(err)
 		}

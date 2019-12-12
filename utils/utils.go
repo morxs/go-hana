@@ -49,7 +49,7 @@ func (nt NullTime) Value() (driver.Value, error) {
 }
 
 // ReadConfig - Read config from ini files
-func ReadConfig(p string) (string, error) {
+func ReadConfig(p string) (string, string, error) {
 	if p == "" {
 		p = "config.ini"
 	}
@@ -57,7 +57,7 @@ func ReadConfig(p string) (string, error) {
 	if err != nil {
 		WriteMsg("CONFIG")
 		// log.Fatal(err)
-		return "", err
+		return "", "", err
 	}
 	iniSection := iniCfg.Section("server")
 	iniKeyUsername := iniSection.Key("uid").String()
@@ -66,7 +66,10 @@ func ReadConfig(p string) (string, error) {
 	iniKeyPort := iniSection.Key("port").String()
 	hdbDsn := "hdb://" + iniKeyUsername + ":" + iniKeyPassword + "@" + iniKeyHost + ":" + iniKeyPort
 
-	return hdbDsn, nil
+	iniSaveSection := iniCfg.Section("save")
+	iniExtension := iniSaveSection.Key("extension").String()
+
+	return hdbDsn, iniExtension, nil
 }
 
 // WriteMsg - Just a wrapper of fmt.Print()
